@@ -49,4 +49,16 @@ public class BranchRightRail : Rail {
 		return base.CanRailBeReached(rail) || isDownBranchedRail;
 	}
 
+	public Rail GetBranchedRail () {
+		return branchedRail;
+	}
+
+	public override float GetX () {
+		if (RailSpawner.player.willTakeBranch) {
+			return base.GetX() - 0.625f * ((transform.position.y - 1.5f) / 1.5f);
+		} else {
+			return base.GetX();
+		}
+	}
+
 }

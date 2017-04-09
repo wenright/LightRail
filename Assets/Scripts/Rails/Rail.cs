@@ -108,4 +108,8 @@ public class Rail : MonoBehaviour {
 
 		return false;
 	}
+
+	public virtual float GetX () {
+		return transform.position.x;
+	}
 }
