@@ -9,6 +9,9 @@ public class RailSpawner : MonoBehaviour {
     public static float speed = 2f;
     public static GameObject rail;
     public static GameObject branchRight;
+    public static GameObject deadEnd;
+
+    public static Player player;
 
     private static float acceleration = 0.0f;
 
@@ -17,8 +20,12 @@ public class RailSpawner : MonoBehaviour {
     void Start () {
     	rails = new List<Rail>();
 
+    	GameObject playerObject = GameObject.FindWithTag("Player");
+    	player = playerObject.GetComponent<Player>();
+
 		rail = Resources.Load("rail") as GameObject;
 		branchRight = Resources.Load("branchRight") as GameObject;
+		deadEnd = Resources.Load("deadEnd") as GameObject;
     }
 
     void Update () {

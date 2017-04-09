@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Rail : MonoBehaviour {
 
-	private Rail next;
-	private SpriteRenderer spriteRenderer;
+	protected Rail next;
+	protected SpriteRenderer spriteRenderer;
 
 	void Start () {
 		gameObject.name = "rail";
@@ -16,7 +16,7 @@ public class Rail : MonoBehaviour {
 		transform.Translate(Vector2.up * -RailSpawner.speed * Time.deltaTime);
 
 		if (next == null && transform.position.y <= RailSpawner.spawnPoint.y) {
-			SpawnRail();
+			next = SpawnRail();
 		}
 
 		if (transform.position.y <= RailSpawner.destroyPoint.y) {
@@ -25,20 +25,27 @@ public class Rail : MonoBehaviour {
 		}
 	}
 
-	protected virtual void SpawnRail (Vector3 position) {
+	protected virtual Rail SpawnRail (Vector3 position) {
 		GameObject railTypeToSpawn = RailSpawner.rail;
 
+		// TODO spawn dead ends more often on paths that the player can never go down, and don't branch on those paths
+		
 		if (Random.value >= 0.8 && !IsARailToRight()) {
 			railTypeToSpawn = RailSpawner.branchRight;
+		} else if (Random.value >= 0.2 && RailSpawner.player.currentRail.GetPathCount() > 2) {
+			railTypeToSpawn = RailSpawner.deadEnd;
 		}
 
 		GameObject railInstance = Instantiate(railTypeToSpawn, transform.position + position, Quaternion.identity);
-		next = railInstance.GetComponent<Rail>();
-		RailSpawner.AddRail(next);
+
+		Rail nextRail = railInstance.GetComponent<Rail>();
+		RailSpawner.AddRail(nextRail);
+
+		return nextRail;
 	}
 
-	protected virtual void SpawnRail () {
-		SpawnRail(new Vector3(0, 1.25f, 0));
+	protected virtual Rail SpawnRail () {
+		return SpawnRail(new Vector3(0, 1.25f, 0));
 	}
 
 	public bool IsHead () {
@@ -46,12 +53,20 @@ public class Rail : MonoBehaviour {
 		return next == null;
 	}
 
-	public bool HasPath () {
+	public virtual bool HasPath () {
 		if (next == null) {
-			return this is DeadEndRail;
+			return true;
 		}
 
 		return next.HasPath();
+	}
+
+	public virtual int GetPathCount () {
+		if (IsHead()) {
+			return 1;
+		}
+
+		return next.GetPathCount();
 	}
 
 	public Rail GetNext () {
@@ -59,6 +74,11 @@ public class Rail : MonoBehaviour {
 	}
 
 	public bool Intersects (Bounds bounds) {
+		// TODO why is spriterenderer null sometimes?
+		if (spriteRenderer == null) {
+			return false;
+		}
+
 		return spriteRenderer.bounds.Intersects(bounds);
 	}
 
