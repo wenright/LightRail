@@ -39,4 +39,14 @@ public class BranchRightRail : Rail {
 		return count;
 	}
 
+	public override bool CanRailBeReached (Rail rail) {
+		bool isDownBranchedRail = false;
+
+		if (branchedRail != null) {
+			isDownBranchedRail = branchedRail.CanRailBeReached(rail);
+		}
+
+		return base.CanRailBeReached(rail) || isDownBranchedRail;
+	}
+
 }

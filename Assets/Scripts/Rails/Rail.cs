@@ -28,11 +28,14 @@ public class Rail : MonoBehaviour {
 	protected virtual Rail SpawnRail (Vector3 position) {
 		GameObject railTypeToSpawn = RailSpawner.rail;
 
+		// Rails that branch away from the player cannot be reached by them, so they should have a higher chance of becoming dead ends
+		bool isInPlay = RailSpawner.player.currentRail.CanRailBeReached(this);
+
 		// TODO spawn dead ends more often on paths that the player can never go down, and don't branch on those paths
-		
+
 		if (Random.value >= 0.8 && !IsARailToRight()) {
 			railTypeToSpawn = RailSpawner.branchRight;
-		} else if (Random.value >= 0.2 && RailSpawner.player.currentRail.GetPathCount() > 2) {
+		} else if (Random.value >= 0.4 && RailSpawner.player.currentRail.GetPathCount() > 2 || !isInPlay) {
 			railTypeToSpawn = RailSpawner.deadEnd;
 		}
 
@@ -42,6 +45,18 @@ public class Rail : MonoBehaviour {
 		RailSpawner.AddRail(nextRail);
 
 		return nextRail;
+	}
+
+	public virtual bool CanRailBeReached (Rail rail) {
+		if (this == rail) {
+			return true;
+		}
+
+		if (next == null) {
+			return false;
+		}
+
+		return next.CanRailBeReached(rail);
 	}
 
 	protected virtual Rail SpawnRail () {
