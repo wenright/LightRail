@@ -4,13 +4,9 @@ using UnityEngine;
 
 public class BranchRightRail : Rail {
 
-	// Use this for initialization
-	void Start () {
-		
+	protected override void SpawnRail () {
+		base.SpawnRail();
+		base.SpawnRail(new Vector3(0.625f, 1.25f, 0));
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 }
