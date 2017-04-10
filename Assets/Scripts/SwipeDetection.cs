@@ -9,6 +9,7 @@ public class SwipeDetection : MonoBehaviour {
 
 	// Distance in pixels that mouse needs to be moved to be considered a swipe
 	private int gate = 20;
+	private bool mousePressed = false;
 
 	void Start () {
 		player = GetComponent<Player>();
@@ -17,9 +18,10 @@ public class SwipeDetection : MonoBehaviour {
 	void Update () {
 		if (Input.GetMouseButtonDown(0)) {
 			mouseStart = Input.mousePosition;
+			mousePressed = true;
 		}
 
-		if (Input.GetMouseButtonUp(0)) {
+		if (mousePressed) {
 			CheckSwipe();
 		}
 	}
@@ -28,6 +30,8 @@ public class SwipeDetection : MonoBehaviour {
 		float delta = (mouseStart - Input.mousePosition).x;
 
 		if (Mathf.Abs(delta) >= gate) {
+			mousePressed = false;
+
 			if (delta > 0) {
 				player.SwipeLeft();
 			} else {

@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class Rail : MonoBehaviour {
 
-	protected Rail next;
+	public Rail next;
 	protected SpriteRenderer spriteRenderer;
 
 	void Start () {
@@ -33,10 +34,21 @@ public class Rail : MonoBehaviour {
 
 		// TODO spawn dead ends more often on paths that the player can never go down, and don't branch on those paths
 
-		if (Random.value >= 0.8 && !IsARailToRight()) {
-			railTypeToSpawn = RailSpawner.branchRight;
+		if (Random.value >= 0.8) {
+			if (Random.value >= 0.5) {
+				if (!IsARailToRight()) {
+					railTypeToSpawn = RailSpawner.branchRight;
+				}
+			} else {
+				if (!IsARailToLeft()) {
+					railTypeToSpawn = RailSpawner.branchLeft;
+				}
+			}
 		} else if (Random.value >= 0.4 && RailSpawner.player.currentRail.GetPathCount() > 2 || !isInPlay) {
-			railTypeToSpawn = RailSpawner.deadEnd;
+			// TODO generalize for all branch types
+			if (!(this is BranchRail)) {
+				railTypeToSpawn = RailSpawner.deadEnd;
+			}
 		}
 
 		GameObject railInstance = Instantiate(railTypeToSpawn, transform.position + position, Quaternion.identity);
@@ -98,7 +110,15 @@ public class Rail : MonoBehaviour {
 	}
 
 	public bool IsARailToRight () {
-		Bounds bounds = new Bounds(spriteRenderer.bounds.center + new Vector3(0.625f, 0, 0), spriteRenderer.bounds.size);
+		return IsARailToDir(1);
+	}
+
+	public bool IsARailToLeft () {
+		return IsARailToDir(-1);
+	}
+
+	private bool IsARailToDir (int dir) {
+		Bounds bounds = new Bounds(spriteRenderer.bounds.center + new Vector3(0.625f * dir, 0, 0), spriteRenderer.bounds.size);
 
 		foreach (Rail rail in RailSpawner.rails) {
 			if (rail.Intersects(bounds)) {

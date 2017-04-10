@@ -2,14 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BranchRightRail : Rail {
+public class BranchRail : Rail {
+
+	public bool branchRight = false;
 
 	protected Rail branchedRail;
 
 	protected override Rail SpawnRail () {
 		next = base.SpawnRail();
-		branchedRail = base.SpawnRail(new Vector3(0.625f, 1.25f, 0));
+
+		int sign = -1;
+		if (branchRight) {
+			sign = 1;
+		}
+
+		branchedRail = base.SpawnRail(new Vector3(0.625f * sign, 1.25f, 0));
 		return next;
+	}
+
+	protected override Rail SpawnRail (Vector3 position) {
+		GameObject railTypeToSpawn = RailSpawner.rail;
+
+		GameObject railInstance = Instantiate(railTypeToSpawn, transform.position + position, Quaternion.identity);
+
+		Rail nextRail = railInstance.GetComponent<Rail>();
+		RailSpawner.AddRail(nextRail);
+
+		return nextRail;
 	}
 
 	public override bool HasPath () {
@@ -55,7 +74,12 @@ public class BranchRightRail : Rail {
 
 	public override float GetX () {
 		if (RailSpawner.player.willTakeBranch) {
-			return base.GetX() - 0.625f * ((transform.position.y - 1.5f) / 1.5f);
+			int sign = -1;
+			if (branchRight) {
+				sign = 1;
+			}
+
+			return base.GetX() - sign * 0.625f * ((transform.position.y - 1.5f) / 1.5f);
 		} else {
 			return base.GetX();
 		}

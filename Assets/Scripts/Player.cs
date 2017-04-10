@@ -7,11 +7,11 @@ public class Player : MonoBehaviour {
 	public Rail currentRail;
 	public bool willTakeBranch = false;
 
-	private float lastPosX;
+	// private float lastPosX;
 
 	// Use this for initialization
 	void Start () {
-		lastPosX = transform.position.x;
+		// lastPosX = transform.position.x;
 	}
 	
 	// Update is called once per frame
@@ -27,12 +27,12 @@ public class Player : MonoBehaviour {
 			} else {
 				Rail branchToTake = null;
 
-				if (willTakeBranch && currentRail is BranchRightRail) {
+				if (willTakeBranch && currentRail is BranchRail) {
 					willTakeBranch = false;
 
-					branchToTake = (currentRail as BranchRightRail).GetBranchedRail();
+					branchToTake = (currentRail as BranchRail).GetBranchedRail();
 				} else {
-					branchToTake = nextRail;					
+					branchToTake = nextRail;
 				}
 
 				currentRail.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
@@ -52,8 +52,9 @@ public class Player : MonoBehaviour {
 		// lastPosX = transform.position.x;
 	}
 
+	// TODO Once 3 directional branches are added, swipe direction will become important
 	public void SwipeLeft () {
-
+		willTakeBranch = true;
 	}
 
 	public void SwipeRight () {

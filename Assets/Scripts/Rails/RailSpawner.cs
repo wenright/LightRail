@@ -6,18 +6,22 @@ public class RailSpawner : MonoBehaviour {
 
 	public static Vector3 spawnPoint = new Vector3(0, 5, 0);
 	public static Vector3 destroyPoint = new Vector3(0, -7, 0);
-    public static float speed = 2f;
+    public static float speed = 3f;
     public static GameObject rail;
     public static GameObject branchRight;
+    public static GameObject branchLeft;
     public static GameObject deadEnd;
 
     public static Player player;
 
-    private static float acceleration = 0.0f;
+    private static float acceleration = 0.1f;
 
     public static List<Rail> rails;
 
     void Start () {
+    	// TODO remove this for actual game. Useful for debugging though
+    	// Random.seed = 123;
+
     	rails = new List<Rail>();
 
     	GameObject playerObject = GameObject.FindWithTag("Player");
@@ -25,6 +29,7 @@ public class RailSpawner : MonoBehaviour {
 
 		rail = Resources.Load("rail") as GameObject;
 		branchRight = Resources.Load("branchRight") as GameObject;
+        branchLeft = Resources.Load("branchLeft") as GameObject;
 		deadEnd = Resources.Load("deadEnd") as GameObject;
     }
 
