@@ -20,7 +20,7 @@ public class RailSpawner : MonoBehaviour {
 
     void Start () {
     	// TODO remove this for actual game. Useful for debugging though
-    	// Random.seed = 123;
+    	Random.seed = 321;
 
     	rails = new List<Rail>();
 

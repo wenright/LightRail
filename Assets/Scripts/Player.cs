@@ -60,4 +60,8 @@ public class Player : MonoBehaviour {
 	public void SwipeRight () {
 		willTakeBranch = true;
 	}
+
+	public Rail GetClosestBranch () {
+		return currentRail.GetClosestBranch();
+	}
 }

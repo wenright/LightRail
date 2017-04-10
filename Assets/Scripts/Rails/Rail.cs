@@ -32,6 +32,12 @@ public class Rail : MonoBehaviour {
 		// Rails that branch away from the player cannot be reached by them, so they should have a higher chance of becoming dead ends
 		bool isInPlay = RailSpawner.player.currentRail.CanRailBeReached(this);
 
+		Rail closestBranch = RailSpawner.player.GetClosestBranch();
+		float closestBranchDist = 5;
+		if (closestBranch != null) {
+			closestBranchDist = closestBranch.transform.position.y;			
+		}
+
 		// TODO spawn dead ends more often on paths that the player can never go down, and don't branch on those paths
 
 		if (Random.value >= 0.8) {
@@ -44,9 +50,11 @@ public class Rail : MonoBehaviour {
 					railTypeToSpawn = RailSpawner.branchLeft;
 				}
 			}
-		} else if (Random.value >= 0.4 && RailSpawner.player.currentRail.GetPathCount() > 2 || !isInPlay) {
+		} 
+
+		if (Random.value >= 0.4 && RailSpawner.player.currentRail.GetPathCount() > 2 || !isInPlay) {
 			// TODO generalize for all branch types
-			if (!(this is BranchRail)) {
+			if (!(this is BranchRail) && closestBranchDist >= 2) {
 				railTypeToSpawn = RailSpawner.deadEnd;
 			}
 		}
@@ -98,6 +106,18 @@ public class Rail : MonoBehaviour {
 
 	public Rail GetNext () {
 		return next;
+	}
+
+	public Rail GetClosestBranch () {
+		if (this is BranchRail) {
+			return this;
+		}
+
+		if (next == null) {
+			return null;
+		}
+
+		return next.GetClosestBranch();
 	}
 
 	public bool Intersects (Bounds bounds) {
