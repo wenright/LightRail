@@ -38,8 +38,6 @@ public class Rail : MonoBehaviour {
 			closestBranchDist = closestBranch.transform.position.y;			
 		}
 
-		// TODO spawn dead ends more often on paths that the player can never go down, and don't branch on those paths
-
 		if (Random.value >= 0.8) {
 			if (Random.value >= 0.5) {
 				if (!IsARailToRight()) {
@@ -52,7 +50,7 @@ public class Rail : MonoBehaviour {
 			}
 		} 
 
-		if (Random.value >= 0.4 && RailSpawner.player.currentRail.GetPathCount() > 2 || !isInPlay) {
+		if (Random.value >= 0.2 && RailSpawner.player.currentRail.GetPathCount() > 2 || !isInPlay) {
 			// TODO generalize for all branch types
 			if (!(this is BranchRail) && closestBranchDist >= 2) {
 				railTypeToSpawn = RailSpawner.deadEnd;

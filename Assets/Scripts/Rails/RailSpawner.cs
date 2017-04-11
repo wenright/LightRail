@@ -12,6 +12,9 @@ public class RailSpawner : MonoBehaviour {
     public static GameObject branchLeft;
     public static GameObject deadEnd;
 
+    public UnityEngine.UI.Text scoreText;
+    public float score = 0.0f;
+
     public static Player player;
 
     private static float acceleration = 0.1f;
@@ -20,7 +23,7 @@ public class RailSpawner : MonoBehaviour {
 
     void Start () {
     	// TODO remove this for actual game. Useful for debugging though
-    	Random.seed = 321;
+        // Random.InitState(321123);
 
     	rails = new List<Rail>();
 
@@ -34,6 +37,9 @@ public class RailSpawner : MonoBehaviour {
     }
 
     void Update () {
+    	score += speed * Time.deltaTime;
+    	scoreText.text = ((int) score).ToString();
+
         speed += acceleration * Time.deltaTime;
     }
 

@@ -79,7 +79,7 @@ public class BranchRail : Rail {
 				sign = 1;
 			}
 
-			return base.GetX() - sign * 0.625f * ((transform.position.y - 1.5f) / 1.5f);
+			return base.GetX() - sign * 0.625f * ((transform.position.y - 1f) / 1.5f);
 		} else {
 			return base.GetX();
 		}
