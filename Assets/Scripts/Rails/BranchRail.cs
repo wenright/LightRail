@@ -92,7 +92,7 @@ public class BranchRail : Rail {
 
 			// return base.GetX() - sign * 0.625f * ((transform.position.y - 1f) / 1.5f);
 
-			float percentage = (transform.position.y + 0.5f) / 1.5f;
+			float percentage = (transform.position.y + 1f) / 1.5f;
 
 			percentage = Mathf.Clamp(percentage, 0, 1);
 

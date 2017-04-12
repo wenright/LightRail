@@ -35,7 +35,7 @@ public class Player : MonoBehaviour {
 		}
 
 		// Transfer player to next rail
-		if (currentRail.transform.position.y <= -0.3) {
+		if (currentRail.transform.position.y <= -0.9f) {
 			Rail nextRail = currentRail.GetNext();
 
 			if (nextRail is DeadEndRail) {

@@ -11,7 +11,7 @@ public class SwipeDetection : MonoBehaviour {
 	private Vector3 mouseStart;
 
 	// Distance in pixels that mouse needs to be moved to be considered a swipe
-	private int gate = 35;
+	private int gate = 20;
 	private bool mousePressed = false;
 
 	void Start () {
