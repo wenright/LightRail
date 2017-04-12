@@ -27,6 +27,8 @@ public class Rail : MonoBehaviour {
 	}
 
 	protected virtual Rail SpawnRail (Vector3 position) {
+		// TODO If player does nothing, they never lose. Dead ends are never spawned in the path of the player.
+
 		GameObject railTypeToSpawn = RailSpawner.rail;
 
 		// Rails that branch away from the player cannot be reached by them, so they should have a higher chance of becoming dead ends
@@ -38,7 +40,11 @@ public class Rail : MonoBehaviour {
 			closestBranchDist = closestBranch.transform.position.y;			
 		}
 
-		if (Random.value >= 0.8) {
+		if (Random.value >= 0.5) {
+			// TODO branching rails can merge into eachother, cuasing other bugs if there is a blank rail in the middle surrounded by two inward branches:
+			// 	|/ \|
+			// 	|  |
+			// Seems like branch detection is off. Similar thing happened, but was avoided by restricting branches from spawning more branches 
 			if (Random.value >= 0.5) {
 				if (!IsARailToRight()) {
 					railTypeToSpawn = RailSpawner.branchRight;
@@ -78,7 +84,7 @@ public class Rail : MonoBehaviour {
 	}
 
 	protected virtual Rail SpawnRail () {
-		return SpawnRail(new Vector3(0, 1.25f, 0));
+		return SpawnRail(new Vector3(0, 1.5f, 0));
 	}
 
 	public bool IsHead () {
@@ -136,15 +142,7 @@ public class Rail : MonoBehaviour {
 	}
 
 	private bool IsARailToDir (int dir) {
-		Bounds bounds = new Bounds(spriteRenderer.bounds.center + new Vector3(0.625f * dir, 0, 0), spriteRenderer.bounds.size);
-
-		foreach (Rail rail in RailSpawner.rails) {
-			if (rail.Intersects(bounds)) {
-				return true;
-			}
-		}
-
-		return false;
+		return Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y) + new Vector2(dir * 0.625f, 0), 0.25f).Length > 0;
 	}
 
 	public virtual float GetX () {
