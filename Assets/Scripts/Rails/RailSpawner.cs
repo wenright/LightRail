@@ -5,27 +5,28 @@ using UnityEngine.SceneManagement;
 
 public class RailSpawner : MonoBehaviour {
 
-	// TODO this shouldn't all be static. There should be a single manager instance that handles everything and can be reset to restart the level
-	public static Vector3 spawnPoint = new Vector3(0, 5, 0);
-	public static Vector3 destroyPoint = new Vector3(0, -7, 0);
-	public static float speed = 3f;
-	public static GameObject rail;
-	public static GameObject branchRight;
-	public static GameObject branchLeft;
-	public static GameObject deadEnd;
+	public Vector3 spawnPoint = new Vector3(0, 5, 0);
+	public Vector3 destroyPoint = new Vector3(0, -7, 0);
+	public float speed = 3f;
+	public GameObject rail;
+	public GameObject branchRight;
+	public GameObject branchLeft;
+	public GameObject deadEnd;
 
 	public UnityEngine.UI.Text scoreText;
+	public UnityEngine.UI.Text highScoreText;
 	public float score = 0.0f;
+	public float highScore = 0.0f;
 
-	public static Player player;
+	public Player player;
 
-	private static float acceleration = 0.1f;
+	private float acceleration = 0.1f;
 
-	public static List<Rail> rails;
+	public List<Rail> rails;
 
 	void Start () {
 		// TODO remove this for actual game. Useful for debugging though
-		Random.InitState(321123);
+		// Random.InitState(321123);
 
 		rails = new List<Rail>();
 
@@ -36,6 +37,9 @@ public class RailSpawner : MonoBehaviour {
 		branchRight = Resources.Load("branchRight") as GameObject;
 		branchLeft = Resources.Load("branchLeft") as GameObject;
 		deadEnd = Resources.Load("deadEnd") as GameObject;
+
+		highScore = PlayerPrefs.GetFloat("highscore", 0.0f);
+		highScoreText.text = "HI " + ((int) highScore).ToString();
 	}
 
 	void Update () {
@@ -49,16 +53,18 @@ public class RailSpawner : MonoBehaviour {
 			score += (speed * Time.deltaTime) / 1.5f;
 			scoreText.text = ((int) score).ToString();
 
+			// TODO check highscore, update it if beaten
+
 			speed += acceleration * Time.deltaTime;
 		}
 	}
 
 	// Add rail to rails list
-	public static void AddRail (Rail obj) {
+	public void AddRail (Rail obj) {
 		rails.Add(obj);
 	}
 
-	public static void RemoveRail (Rail obj) {
+	public void RemoveRail (Rail obj) {
 		rails.Remove(obj);
 	}
 }

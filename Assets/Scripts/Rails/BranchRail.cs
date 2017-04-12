@@ -1,12 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class BranchRail : Rail {
 
 	public bool branchRight = false;
 
 	protected Rail branchedRail;
+
+	private LineRenderer curveRenderer;
+	private SpriteRenderer straightRailRenderer;
+
+	void Awake () {
+		curveRenderer = transform.GetChild(0).gameObject.GetComponent<LineRenderer>();
+		straightRailRenderer = GetComponent<SpriteRenderer>();
+
+		curveRenderer.material.DOFade(0.25f, 0.0f);
+	}
 
 	protected override Rail SpawnRail () {
 		next = base.SpawnRail();
@@ -21,12 +32,12 @@ public class BranchRail : Rail {
 	}
 
 	protected override Rail SpawnRail (Vector3 position) {
-		GameObject railTypeToSpawn = RailSpawner.rail;
+		GameObject railTypeToSpawn = railSpawner.rail;
 
 		GameObject railInstance = Instantiate(railTypeToSpawn, transform.position + position, Quaternion.identity);
 
 		Rail nextRail = railInstance.GetComponent<Rail>();
-		RailSpawner.AddRail(nextRail);
+		railSpawner.AddRail(nextRail);
 
 		return nextRail;
 	}
@@ -73,7 +84,7 @@ public class BranchRail : Rail {
 	}
 
 	public override float GetX () {
-		if (RailSpawner.player.willTakeRightBranch || RailSpawner.player.willTakeLeftBranch) {
+		if (railSpawner.player.WillTakeBranch()) {
 			int sign = -1;
 			if (branchRight) {
 				sign = 1;
@@ -89,6 +100,12 @@ public class BranchRail : Rail {
 		} else {
 			return base.GetX();
 		}
+	}
+
+	// Fades the straight branch and brings back the curve branch to make it more clear which branch will be taken
+	public void SwapAlphas () {
+		curveRenderer.material.DOFade(1.0f, 0.25f).SetEase(Ease.InOutQuad);
+		straightRailRenderer.DOFade(0.25f, 0.25f).SetEase(Ease.InOutQuad);
 	}
 
 }

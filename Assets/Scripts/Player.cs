@@ -18,8 +18,12 @@ public class Player : MonoBehaviour {
 	// TODO there should be a game controller that deals with gameOver states
 	public bool gameOver = false;
 
+	private RailSpawner railSpawner;
+
 	// Use this for initialization
 	void Start () {
+		railSpawner = GameObject.FindWithTag("GameController").GetComponent<RailSpawner>();
+
 		lastPosX = transform.position.x;
 	}
 	
@@ -37,11 +41,15 @@ public class Player : MonoBehaviour {
 			if (nextRail is DeadEndRail) {
 				if (!gameOver) {
 					gameOver = true;
-					RailSpawner.speed = 0.0f;
+					railSpawner.speed = 0.0f;
 
 					// TODO tweening and non max white colors
 					gameOverText.color = Color.white;
 					tapToRetryText.color = Color.white;
+
+					if (railSpawner.score > railSpawner.highScore) {
+						PlayerPrefs.SetFloat("highscore", railSpawner.score);
+					}
 				}
 			} else {
 				Rail branchToTake = nextRail;
@@ -65,7 +73,7 @@ public class Player : MonoBehaviour {
 		// TODO branch rails still have some jerky parts at the beginning and the end
 		float vx = lastPosX - transform.position.x;
 		if (Mathf.Abs(vx) >= 0.000001f) {
-			float rotZ = -Mathf.Atan2(RailSpawner.speed * Time.deltaTime, vx);
+			float rotZ = -Mathf.Atan2(railSpawner.speed * Time.deltaTime, vx);
 			float rotationOffset = 90.0f;
 			transform.rotation = Quaternion.Euler(0, 0, rotZ * Mathf.Rad2Deg - rotationOffset);
 			lastPosX = transform.position.x;
@@ -76,11 +84,24 @@ public class Player : MonoBehaviour {
 
 	// TODO Once 3 directional branches are added, swipe direction will become important
 	public void Swipe (SwipeDetection.Directions direction) {
+		// TODO Allow undoing of swipes (Swipe right, then swipe left before reaching branch to go straight)
+		// TODO how far along should changing be allowed? up to two rails away? and can you change on the current rail?
 		if (currentRail is BranchRail || currentRail.next is BranchRail) {
 			if (direction == SwipeDetection.Directions.Left) {
 				willTakeLeftBranch = true;
 			} else {
 				willTakeRightBranch = true;
+			}
+
+			BranchRail branchRail = null;
+			if (currentRail is BranchRail) {
+				branchRail = currentRail as BranchRail;
+			} else {
+				branchRail = currentRail.next as BranchRail;
+			}
+
+			if ((branchRail.branchRight && willTakeRightBranch) || (!branchRail.branchRight && willTakeLeftBranch)) {
+				branchRail.SwapAlphas();				
 			}
 		}
 	}

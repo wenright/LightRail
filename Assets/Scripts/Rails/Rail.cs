@@ -8,33 +8,37 @@ public class Rail : MonoBehaviour {
 	public Rail next;
 	protected SpriteRenderer spriteRenderer;
 
+	protected RailSpawner railSpawner;
+
 	void Start () {
+		railSpawner = GameObject.FindWithTag("GameController").GetComponent<RailSpawner>();
+
 		gameObject.name = "rail";
 		spriteRenderer = GetComponent<SpriteRenderer>();
 	}
 	
 	void Update () {
-		transform.Translate(Vector2.up * -RailSpawner.speed * Time.deltaTime);
+		transform.Translate(Vector2.up * -railSpawner.speed * Time.deltaTime);
 
-		if (next == null && transform.position.y <= RailSpawner.spawnPoint.y) {
+		if (next == null && transform.position.y <= railSpawner.spawnPoint.y) {
 			next = SpawnRail();
 		}
 
-		if (transform.position.y <= RailSpawner.destroyPoint.y) {
+		if (transform.position.y <= railSpawner.destroyPoint.y) {
 			Destroy(gameObject);
-			RailSpawner.RemoveRail(this);
+			railSpawner.RemoveRail(this);
 		}
 	}
 
 	protected virtual Rail SpawnRail (Vector3 position) {
 		// TODO If player does nothing, they never lose. Dead ends are never spawned in the path of the player.
 
-		GameObject railTypeToSpawn = RailSpawner.rail;
+		GameObject railTypeToSpawn = railSpawner.rail;
 
 		// Rails that branch away from the player cannot be reached by them, so they should have a higher chance of becoming dead ends
-		bool isInPlay = RailSpawner.player.currentRail.CanRailBeReached(this);
+		bool isInPlay = railSpawner.player.currentRail.CanRailBeReached(this);
 
-		Rail closestBranch = RailSpawner.player.GetClosestBranch();
+		Rail closestBranch = railSpawner.player.GetClosestBranch();
 		float closestBranchDist = 5;
 		if (closestBranch != null) {
 			closestBranchDist = closestBranch.transform.position.y;			
@@ -47,26 +51,26 @@ public class Rail : MonoBehaviour {
 			// Seems like branch detection is off. Similar thing happened, but was avoided by restricting branches from spawning more branches 
 			if (Random.value >= 0.5) {
 				if (!IsARailToRight()) {
-					railTypeToSpawn = RailSpawner.branchRight;
+					railTypeToSpawn = railSpawner.branchRight;
 				}
 			} else {
 				if (!IsARailToLeft()) {
-					railTypeToSpawn = RailSpawner.branchLeft;
+					railTypeToSpawn = railSpawner.branchLeft;
 				}
 			}
 		} 
 
-		if (Random.value >= 0.2 && RailSpawner.player.currentRail.GetPathCount() >= 2 || !isInPlay) {
+		if (Random.value >= 0.2 && railSpawner.player.currentRail.GetPathCount() >= 2 || !isInPlay) {
 			// TODO generalize for all branch types
 			if (!(this is BranchRail) && closestBranchDist >= 2) {
-				railTypeToSpawn = RailSpawner.deadEnd;
+				railTypeToSpawn = railSpawner.deadEnd;
 			}
 		}
 
 		GameObject railInstance = Instantiate(railTypeToSpawn, transform.position + position, Quaternion.identity);
 
 		Rail nextRail = railInstance.GetComponent<Rail>();
-		RailSpawner.AddRail(nextRail);
+		railSpawner.AddRail(nextRail);
 
 		return nextRail;
 	}
