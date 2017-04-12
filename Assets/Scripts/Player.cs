@@ -84,23 +84,21 @@ public class Player : MonoBehaviour {
 
 	// TODO Once 3 directional branches are added, swipe direction will become important
 	public void Swipe (SwipeDetection.Directions direction) {
+		BranchRail branchRail = null;
+		if (currentRail is BranchRail) {
+			branchRail = currentRail as BranchRail;
+		} else if (currentRail.next is BranchRail) {
+			branchRail = currentRail.next as BranchRail;
+		}
+
 		// TODO Allow undoing of swipes (Swipe right, then swipe left before reaching branch to go straight)
 		// TODO how far along should changing be allowed? up to two rails away? and can you change on the current rail?
-		if (currentRail is BranchRail || currentRail.next is BranchRail) {
-			if (direction == SwipeDetection.Directions.Left) {
+		if (branchRail) {
+			if (direction == SwipeDetection.Directions.Left && !branchRail.branchRight) {
 				willTakeLeftBranch = true;
-			} else {
+				branchRail.SwapAlphas();				
+			} else if (direction == SwipeDetection.Directions.Right && branchRail.branchRight) {
 				willTakeRightBranch = true;
-			}
-
-			BranchRail branchRail = null;
-			if (currentRail is BranchRail) {
-				branchRail = currentRail as BranchRail;
-			} else {
-				branchRail = currentRail.next as BranchRail;
-			}
-
-			if ((branchRail.branchRight && willTakeRightBranch) || (!branchRail.branchRight && willTakeLeftBranch)) {
 				branchRail.SwapAlphas();				
 			}
 		}

@@ -104,8 +104,8 @@ public class BranchRail : Rail {
 
 	// Fades the straight branch and brings back the curve branch to make it more clear which branch will be taken
 	public void SwapAlphas () {
-		curveRenderer.material.DOFade(1.0f, 0.25f).SetEase(Ease.InOutQuad);
-		straightRailRenderer.DOFade(0.25f, 0.25f).SetEase(Ease.InOutQuad);
+		curveRenderer.material.DOFade(1.0f, 0.25f).SetEase(Ease.OutQuad);
+		straightRailRenderer.DOFade(0.25f, 0.25f).SetEase(Ease.InQuad);
 	}
 
 }
