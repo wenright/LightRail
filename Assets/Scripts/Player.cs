@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Player : MonoBehaviour {
 
@@ -11,6 +12,7 @@ public class Player : MonoBehaviour {
 	public Text gameOverText;
 	public Text tapToRetryText;
 
+	// TODO move this into a different script that controls rotation
 	private float lastPosX;
 
 	// TODO there should be a game controller that deals with gameOver states
@@ -45,7 +47,7 @@ public class Player : MonoBehaviour {
 				Rail branchToTake = nextRail;
 
 				if (currentRail is BranchRail) {
-					if (((currentRail as BranchRail).branchRight && willTakeRightBranch) || (!(currentRail as BranchRail).branchRight && willTakeLeftBranch)) {
+					if (WillTakeBranch()) {
 						branchToTake = (currentRail as BranchRail).GetBranchedRail();
 
 						willTakeLeftBranch = false;
@@ -85,5 +87,9 @@ public class Player : MonoBehaviour {
 
 	public Rail GetClosestBranch () {
 		return currentRail.GetClosestBranch();
+	}
+
+	public bool WillTakeBranch () {
+		return ((currentRail as BranchRail).branchRight && willTakeRightBranch) || (!(currentRail as BranchRail).branchRight && willTakeLeftBranch);
 	}
 }
