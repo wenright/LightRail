@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class RailSpawner : MonoBehaviour {
 
@@ -20,9 +21,10 @@ public class RailSpawner : MonoBehaviour {
 
 	public Player player;
 
-	private float acceleration = 0.1f;
-
 	public List<Rail> rails;
+
+	private float acceleration = 0.1f;
+	private bool hasBeatenHighScore = false;
 
 	void Start () {
 		// TODO remove this for actual game. Useful for debugging though
@@ -54,6 +56,16 @@ public class RailSpawner : MonoBehaviour {
 			scoreText.text = ((int) score).ToString();
 
 			// TODO check highscore, update it if beaten
+			if (score > highScore) {
+				if (!hasBeatenHighScore) {
+					hasBeatenHighScore = true;
+
+					scoreText.DOFade(0.0f, 0.25f).SetEase(Ease.OutQuad);
+					scoreText.rectTransform.DOAnchorPosY(-48, 0.25f).SetEase(Ease.OutQuad);
+				}
+
+				highScoreText.text = "HI " + ((int) score).ToString();
+			}
 
 			speed += acceleration * Time.deltaTime;
 		}
