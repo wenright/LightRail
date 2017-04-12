@@ -5,7 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
 	public Rail currentRail;
-	public bool willTakeBranch = false;
+	public bool willTakeRightBranch = false;
+	public bool willTakeLeftBranch = false;
 
 	private float lastPosX;
 
@@ -25,14 +26,15 @@ public class Player : MonoBehaviour {
 				Debug.Log("Game Over!");
 				RailSpawner.speed = 0.0f;
 			} else {
-				Rail branchToTake = null;
+				Rail branchToTake = nextRail;
 
-				if (willTakeBranch && currentRail is BranchRail) {
-					willTakeBranch = false;
+				if (currentRail is BranchRail) {
+					if (((currentRail as BranchRail).branchRight && willTakeRightBranch) || (!(currentRail as BranchRail).branchRight && willTakeLeftBranch)) {
+						branchToTake = (currentRail as BranchRail).GetBranchedRail();
 
-					branchToTake = (currentRail as BranchRail).GetBranchedRail();
-				} else {
-					branchToTake = nextRail;
+						willTakeLeftBranch = false;
+						willTakeRightBranch = false;
+					}
 				}
 
 				currentRail = branchToTake;
@@ -41,7 +43,7 @@ public class Player : MonoBehaviour {
 
 		transform.position = new Vector3(currentRail.GetX(), 0, 0);
 
-		// TODO when branches are replaced with curves, readd this code
+		// Rotate player so that they follow the path of the rail
 		float vx = lastPosX - transform.position.x;
 		float rotZ = -Mathf.Atan2(RailSpawner.speed * Time.deltaTime, vx);
 		float rotationOffset = 90.0f;
@@ -50,12 +52,14 @@ public class Player : MonoBehaviour {
 	}
 
 	// TODO Once 3 directional branches are added, swipe direction will become important
-	public void SwipeLeft () {
-		willTakeBranch = true;
-	}
-
-	public void SwipeRight () {
-		willTakeBranch = true;
+	public void Swipe (SwipeDetection.Directions direction) {
+		if (currentRail is BranchRail || currentRail.next is BranchRail) {
+			if (direction == SwipeDetection.Directions.Left) {
+				willTakeLeftBranch = true;
+			} else {
+				willTakeRightBranch = true;
+			}
+		}
 	}
 
 	public Rail GetClosestBranch () {

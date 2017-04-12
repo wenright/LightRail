@@ -73,7 +73,7 @@ public class BranchRail : Rail {
 	}
 
 	public override float GetX () {
-		if (RailSpawner.player.willTakeBranch) {
+		if (RailSpawner.player.willTakeRightBranch || RailSpawner.player.willTakeLeftBranch) {
 			int sign = -1;
 			if (branchRight) {
 				sign = 1;

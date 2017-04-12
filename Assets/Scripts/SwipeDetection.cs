@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SwipeDetection : MonoBehaviour {
 
+	public enum Directions {Left, Right};
+	public Directions direction;
+
 	private Player player;
 	private Vector3 mouseStart;
 
@@ -33,9 +36,9 @@ public class SwipeDetection : MonoBehaviour {
 			mousePressed = false;
 
 			if (delta > 0) {
-				player.SwipeLeft();
+				player.Swipe(Directions.Left);
 			} else {
-				player.SwipeRight();
+				player.Swipe(Directions.Right);
 			}
 		}
 	}
