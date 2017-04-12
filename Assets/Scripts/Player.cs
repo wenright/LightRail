@@ -60,6 +60,7 @@ public class Player : MonoBehaviour {
 		transform.position = new Vector3(currentRail.GetX(), 0, 0);
 
 		// Rotate player so that they follow the path of the rail
+		// TODO branch rails still have some jerky parts at the beginning and the end
 		float vx = lastPosX - transform.position.x;
 		if (Mathf.Abs(vx) >= 0.000001f) {
 			float rotZ = -Mathf.Atan2(RailSpawner.speed * Time.deltaTime, vx);

@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RailSpawner : MonoBehaviour {
 
+	// TODO this shouldn't all be static. There should be a single manager instance that handles everything and can be reset to restart the level
 	public static Vector3 spawnPoint = new Vector3(0, 5, 0);
 	public static Vector3 destroyPoint = new Vector3(0, -7, 0);
 	public static float speed = 3f;
@@ -37,7 +39,13 @@ public class RailSpawner : MonoBehaviour {
 	}
 
 	void Update () {
-		if (!player.gameOver) {
+		if (player.gameOver) {
+			if (Input.GetMouseButtonDown(0)) {
+				// Restart game
+				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+				speed = 3.0f;
+			}
+		} else {
 			score += (speed * Time.deltaTime) / 1.5f;
 			scoreText.text = ((int) score).ToString();
 
