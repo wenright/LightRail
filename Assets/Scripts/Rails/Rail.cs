@@ -56,7 +56,7 @@ public class Rail : MonoBehaviour {
 			}
 		} 
 
-		if (Random.value >= 0.2 && RailSpawner.player.currentRail.GetPathCount() > 2 || !isInPlay) {
+		if (Random.value >= 0.2 && RailSpawner.player.currentRail.GetPathCount() >= 2 || !isInPlay) {
 			// TODO generalize for all branch types
 			if (!(this is BranchRail) && closestBranchDist >= 2) {
 				railTypeToSpawn = RailSpawner.deadEnd;
