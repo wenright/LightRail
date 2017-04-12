@@ -35,7 +35,7 @@ public class Player : MonoBehaviour {
 		}
 
 		// Transfer player to next rail
-		if (currentRail.transform.position.y <= -0.9f) {
+		if (currentRail.transform.position.y <= -1f) {
 			Rail nextRail = currentRail.GetNext();
 
 			if (nextRail is DeadEndRail) {
@@ -80,6 +80,15 @@ public class Player : MonoBehaviour {
 		} else {
 			transform.rotation = Quaternion.identity;
 		}
+
+		#if UNITY_EDITOR
+			if (Input.GetKeyDown("right")) {
+				Swipe(SwipeDetection.Directions.Right);
+			} else if (Input.GetKeyDown("left")) {
+				Swipe(SwipeDetection.Directions.Left);
+			}
+		#endif
+
 	}
 
 	// TODO Once 3 directional branches are added, swipe direction will become important
