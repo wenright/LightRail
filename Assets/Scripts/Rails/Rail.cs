@@ -38,48 +38,53 @@ public class Rail : MonoBehaviour {
 	}
 
 	protected virtual Rail SpawnRail (Vector3 position) {
-		// TODO If player does nothing, they never lose. Dead ends are never spawned in the path of the player.
-
-		GameObject railTypeToSpawn = railSpawner.rail;
-
-		// Rails that branch away from the player cannot be reached by them, so they should have a higher chance of becoming dead ends
-		bool isInPlay = railSpawner.player.currentRail.CanRailBeReached(this);
-
-		Rail closestBranch = railSpawner.player.GetClosestBranch();
-		float closestBranchDist = 5;
-		if (closestBranch != null) {
-			closestBranchDist = closestBranch.transform.position.y;			
+		if (ShouldSpawnBranchRight()) {
+			return SpawnRail(position, railSpawner.branchRight);
+		} else if (ShouldSpawnBranchLeft()) {
+			return SpawnRail(position, railSpawner.branchLeft);
+		} else if (ShouldSpawnDeadEnd()) {
+			return SpawnRail(position, railSpawner.deadEnd);
 		}
 
-		if (Random.value >= 0.5) {
-			// TODO branching rails can merge into eachother, cuasing other bugs if there is a blank rail in the middle surrounded by two inward branches:
-			// 	|/ \|
-			// 	|  |
-			// Seems like branch detection is off. Similar thing happened, but was avoided by restricting branches from spawning more branches 
-			if (Random.value >= 0.5) {
-				if (!IsARailToRight()) {
-					railTypeToSpawn = railSpawner.branchRight;
-				}
-			} else {
-				if (!IsARailToLeft()) {
-					railTypeToSpawn = railSpawner.branchLeft;
-				}
-			}
-		} 
+		return SpawnRail(position, railSpawner.rail);
+	}
 
-		if (Random.value >= 0.2 && railSpawner.player.currentRail.GetPathCount() >= 2 || !isInPlay) {
-			// TODO generalize for all branch types
-			if (!(this is BranchRail) && closestBranchDist >= 2) {
-				railTypeToSpawn = railSpawner.deadEnd;
-			}
-		}
-
+	protected virtual Rail SpawnRail (Vector3 position, GameObject railTypeToSpawn) {
 		GameObject railInstance = Instantiate(railTypeToSpawn, transform.position + position, Quaternion.identity);
 
 		Rail nextRail = railInstance.GetComponent<Rail>();
 		railSpawner.AddRail(nextRail);
 
 		return nextRail;
+	}
+
+	protected bool ShouldSpawnDeadEnd () {
+		// Rails that branch away from the player cannot be reached by them, so they should have a higher chance of becoming dead ends
+		bool isInPlay = railSpawner.player.currentRail.CanRailBeReached(this);
+
+		// Prevents rails from branching at inconvenien times where a crazy fast reaction time is required
+		Rail closestBranch = railSpawner.player.GetClosestBranch();
+		float closestBranchDist = 5;
+		if (closestBranch != null) {
+			closestBranchDist = closestBranch.transform.position.y;			
+		}
+
+		if (Random.value >= 0.2 && railSpawner.player.currentRail.GetPathCount() >= 2 || !isInPlay) {
+		// TODO generalize for all branch types
+			if (!(this is BranchRail) && closestBranchDist >= 2) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	protected bool ShouldSpawnBranchRight () {
+		return Random.value >= 0.75 && !IsARailToRight();
+	}
+
+	protected bool ShouldSpawnBranchLeft () {
+		return Random.value >= 0.75 && !IsARailToLeft();
 	}
 
 	public virtual bool CanRailBeReached (Rail rail) {
@@ -153,7 +158,25 @@ public class Rail : MonoBehaviour {
 	}
 
 	private bool IsARailToDir (int dir) {
-		return Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y) + new Vector2(dir * 0.625f, 0), 0.25f).Length > 0;
+		return GetRailToDir(dir) != null;
+	}
+
+	public Rail GetRailToRight () {
+		return GetRailToDir(1);
+	}
+
+	public Rail GetRailToLeft () {
+		return GetRailToDir(-1);
+	}
+
+	private Rail GetRailToDir (int dir) {
+		Collider2D[] collisions = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y) + new Vector2(dir * 0.625f, 0), 0.25f);
+
+		if (collisions.Length > 0) {
+			return collisions[0].gameObject.GetComponent<Rail>();
+		}
+
+		return null;
 	}
 
 	public virtual float GetX () {
