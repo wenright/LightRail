@@ -70,7 +70,7 @@ public class Rail : MonoBehaviour {
 		}
 
 		if (Random.value >= 0.2 && railSpawner.player.currentRail.GetPathCount() >= 2 || !isInPlay) {
-		// TODO generalize for all branch types
+			// TODO generalize for all branch types
 			if (!(this is BranchRail) && closestBranchDist >= 2) {
 				return true;
 			}
@@ -170,7 +170,13 @@ public class Rail : MonoBehaviour {
 	}
 
 	private Rail GetRailToDir (int dir) {
-		Collider2D[] collisions = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y) + new Vector2(dir * 0.625f, 0), 0.25f);
+		Vector2 pos = new Vector2(transform.position.x, transform.position.y);
+		Vector2 offset = new Vector2(dir * 0.625f + 0.25f, 1.0f);
+
+		// Draws a small line showing where the test point is
+		// Debug.DrawLine(pos + offset, pos + offset + new Vector2(0.25f, 0.0f), Color.red, 0.25f);
+
+		Collider2D[] collisions = Physics2D.OverlapCircleAll(pos + offset, 0.25f);
 
 		if (collisions.Length > 0) {
 			return collisions[0].gameObject.GetComponent<Rail>();
