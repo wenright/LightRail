@@ -34,16 +34,10 @@ sealed class AndroidPlatformConfiguration : PlatformConfiguration {
         C.AndroidPlatformConfiguration_SetActivity(SelfPtr(), activity);
     }
 
-    internal void SetOptionalIntentHandlerForUI(Action<IntPtr> intentHandler)
-    {
+    internal void SetOptionalIntentHandlerForUI(Action<IntPtr> intentHandler) {
         Misc.CheckNotNull(intentHandler);
         C.AndroidPlatformConfiguration_SetOptionalIntentHandlerForUI(SelfPtr(),
-        InternalIntentHandler, Callbacks.ToIntPtr(intentHandler));
-    }
-
-    internal void SetOptionalViewForPopups(IntPtr view)
-    {
-        C.AndroidPlatformConfiguration_SetOptionalViewForPopups(SelfPtr(), view);
+            InternalIntentHandler, Callbacks.ToIntPtr(intentHandler));
     }
 
     protected override void CallDispose(HandleRef selfPointer) {
@@ -57,8 +51,7 @@ sealed class AndroidPlatformConfiguration : PlatformConfiguration {
     }
 
     internal static AndroidPlatformConfiguration Create() {
-        IntPtr p = C.AndroidPlatformConfiguration_Construct();
-        return new AndroidPlatformConfiguration(p);
+        return new AndroidPlatformConfiguration(C.AndroidPlatformConfiguration_Construct());
     }
 }
 }

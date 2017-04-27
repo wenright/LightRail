@@ -19,16 +19,15 @@
 
 namespace GooglePlayGames.Native {
 
-    using UnityEngine;
-    using GooglePlayGames.Android;
-    using GooglePlayGames.BasicApi.Nearby;
-    using GooglePlayGames.Native.PInvoke;
-    using GooglePlayGames.OurUtils;
-    using System;
-    using N = GooglePlayGames.Native.Cwrapper.NearbyConnectionsStatus;
-    using GooglePlayGames.BasicApi;
+using UnityEngine;
+using GooglePlayGames.Android;
+using GooglePlayGames.BasicApi.Nearby;
+using GooglePlayGames.Native.PInvoke;
+using GooglePlayGames.OurUtils;
+using System;
+using N = GooglePlayGames.Native.Cwrapper.NearbyConnectionsStatus;
 
-    public class NativeNearbyConnectionClientFactory {
+public class NativeNearbyConnectionClientFactory {
 
         private static volatile NearbyConnectionsManager sManager;
         private static Action<INearbyConnectionClient> sCreationCallback;
@@ -58,7 +57,7 @@ namespace GooglePlayGames.Native {
             // The connection manager needs to be initialized before using it, so
             // wait for initialization.
             sBuilder.SetOnInitializationFinished(OnManagerInitialized);
-            PlatformConfiguration cfg = new AndroidClient().CreatePlatformConfiguration(PlayGamesClientConfiguration.DefaultConfiguration);
+            PlatformConfiguration cfg = new AndroidClient().CreatePlatformConfiguration();
             Debug.Log("Building manager Now");
             sManager = sBuilder.Build(cfg);
         }

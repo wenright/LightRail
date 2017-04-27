@@ -174,11 +174,6 @@ namespace GooglePlayGames.Editor
             wr.Close();
             mDirty = false;
         }
-        
-        public static void Reload ()
-	    {
-		    sInstance = new GPGSProjectSettings();
-	    }
     }
 }
 #endif

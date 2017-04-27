@@ -129,5 +129,6 @@ public class Player : MonoBehaviour {
 		}
 
 		// TODO add a button to show leaderboard, don't just show it automatically
+		googlePlayController.ShowLeaderboardUI();
 	}
 }

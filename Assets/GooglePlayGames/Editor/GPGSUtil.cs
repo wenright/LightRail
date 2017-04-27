@@ -32,6 +32,9 @@ namespace GooglePlayGames.Editor
     /// </summary>
     public static class GPGSUtil
     {
+        /// <summary>Property key for project requiring G+ access
+        public const string REQUIREGOOGLEPLUSKEY = "proj.requireGPlus";
+
         /// <summary>Property key for project settings.</summary>
         public const string SERVICEIDKEY = "App.NearbdServiceId";
 
@@ -132,6 +135,7 @@ namespace GooglePlayGames.Editor
                 { WEBCLIENTIDPLACEHOLDER, WEBCLIENTIDKEY },
                 { IOSCLIENTIDPLACEHOLDER, IOSCLIENTIDKEY },
                 { IOSBUNDLEIDPLACEHOLDER, IOSBUNDLEIDKEY },
+                { REQUIREGOOGLEPLUSPLACEHOLDER, REQUIREGOOGLEPLUSKEY },
                 { PLUGINVERSIONPLACEHOLDER, PLUGINVERSIONKEY}
             };
 

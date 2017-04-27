@@ -36,9 +36,8 @@ namespace GooglePlayGames.Android
             "(Landroid/app/Activity;Landroid/content/Intent;)V";
 
         private TokenClient tokenClient;
-        private static AndroidJavaObject invisible;
 
-        public PlatformConfiguration CreatePlatformConfiguration(PlayGamesClientConfiguration clientConfig)
+        public PlatformConfiguration CreatePlatformConfiguration()
         {
             var config = AndroidPlatformConfiguration.Create();
             using (var activity = AndroidTokenClient.GetActivity())
@@ -66,40 +65,19 @@ namespace GooglePlayGames.Android
                                 }
                             });
                     });
-                if (clientConfig.IsHidingPopups)
-                {
-                    config.SetOptionalViewForPopups(CreateHiddenView(activity.GetRawObject()));
-                }
             }
+
             return config;
         }
 
 
-        public TokenClient CreateTokenClient(bool reset)
+        public TokenClient CreateTokenClient(string playerId, bool reset)
         {
-            if (tokenClient == null)
+            if (tokenClient == null || reset)
             {
-                tokenClient = new AndroidTokenClient();
+                tokenClient = new AndroidTokenClient(playerId);
             }
-            else if (reset)
-            {
-                tokenClient.Signout();
-            }
-
             return tokenClient;
-        }
-
-        private IntPtr CreateHiddenView(IntPtr activity)
-        {
-            // Keep it static so it will always be referenced.
-            if (invisible == null || invisible.GetRawObject() == IntPtr.Zero) {
-              invisible = new AndroidJavaObject("android.view.View", activity);
-              invisible.Call("setVisibility",/*View.INVISIBLE*/(int)0x00000004);
-              invisible.Call("setClickable", false);
-            }
-
-            return invisible.GetRawObject();
-            
         }
 
 
@@ -134,14 +112,6 @@ namespace GooglePlayGames.Android
             finally
             {
                 AndroidJNIHelper.DeleteJNIArgArray(objectArray, jArgs);
-            }
-        }
-
-        public void Signout()
-        {
-            if (tokenClient != null)
-            {
-                tokenClient.Signout();
             }
         }
 

@@ -97,10 +97,17 @@ namespace GooglePlayGames
 
         /// <summary>
         /// Gets an id token for the user.
+        /// NOTE: This property can only be accessed using the main Unity thread.
         /// </summary>
-        public string GetIdToken()
+        /// <param name="idTokenCallback"> A callback to be invoked after token is retrieved. Will be passed null value
+        /// on failure. </param>
+        [Obsolete("Use PlayGamesPlatform.GetServerAuthCode()")]
+        public void GetIdToken(Action<string> idTokenCallback)
         {
-            return mPlatform.GetIdToken();
+            if (authenticated)
+                mPlatform.GetIdToken(idTokenCallback);
+            else
+                idTokenCallback(null);
         }
 
         /// <summary>
@@ -179,6 +186,21 @@ namespace GooglePlayGames
             }
         }
 
+        /// <summary>
+        /// Gets an access token for the user.
+        /// NOTE: This property can only be accessed using the main Unity thread.
+        /// </summary>
+        /// <returns>
+        /// An id token for the user.
+        /// </returns>
+        [Obsolete("Use PlayGamesPlatform.GetServerAuthCode()")]
+        public string accessToken
+        {
+            get
+            {
+                return authenticated ? mPlatform.GetAccessToken() : string.Empty;
+            }
+        }
 
         /// <summary>
         /// Returns true (since this is the local user).
