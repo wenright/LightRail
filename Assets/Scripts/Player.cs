@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
 	public bool willTakeLeftBranch = false;
 	public Text gameOverText;
 	public Text tapToRetryText;
+	public GooglePlay googlePlayController;
 
 	// TODO move this into a different script that controls rotation
 	private float lastPosX;
@@ -40,16 +41,7 @@ public class Player : MonoBehaviour {
 
 			if (nextRail is DeadEndRail) {
 				if (!gameOver) {
-					gameOver = true;
-					railSpawner.speed = 0.0f;
-
-					// TODO tweening and non max white colors
-					gameOverText.color = Color.white;
-					tapToRetryText.color = Color.white;
-
-					if (railSpawner.score > railSpawner.highScore) {
-						PlayerPrefs.SetFloat("highscore", railSpawner.score);
-					}
+					GameOver();
 				}
 			} else {
 				Rail branchToTake = nextRail;
@@ -119,5 +111,24 @@ public class Player : MonoBehaviour {
 
 	public bool WillTakeBranch () {
 		return ((currentRail as BranchRail).branchRight && willTakeRightBranch) || (!(currentRail as BranchRail).branchRight && willTakeLeftBranch);
+	}
+
+	private void GameOver () {
+		gameOver = true;
+		railSpawner.speed = 0.0f;
+
+		// TODO tweening and non max white colors
+		gameOverText.color = Color.white;
+		tapToRetryText.color = Color.white;
+
+		if (railSpawner.score > railSpawner.highScore) {
+			PlayerPrefs.SetFloat("highscore", railSpawner.score);
+
+			// Upload high score
+			googlePlayController.UploadScore((int) railSpawner.score);
+		}
+
+		// TODO add a button to show leaderboard, don't just show it automatically
+		googlePlayController.ShowLeaderboardUI();
 	}
 }
