@@ -69,7 +69,7 @@ public class Rail : MonoBehaviour {
 			closestBranchDist = closestBranch.transform.position.y;			
 		}
 
-		if (Random.value >= 0.2 && railSpawner.player.currentRail.GetPathCount() >= 2 || !isInPlay) {
+		if ((Random.value >= 0.2 && railSpawner.player.currentRail.GetPathCount() >= 2) || (!isInPlay && Random.value >= 0.1)) {
 			// TODO generalize for all branch types
 			if (!(this is BranchRail) && closestBranchDist >= 2) {
 				return true;
@@ -171,7 +171,7 @@ public class Rail : MonoBehaviour {
 
 	private Rail GetRailToDir (int dir) {
 		Vector2 pos = new Vector2(transform.position.x, transform.position.y);
-		Vector2 offset = new Vector2(dir * 0.625f + 0.25f, 1.0f);
+		Vector2 offset = new Vector2(dir * 0.625f, 1.0f);
 
 		// Draws a small line showing where the test point is
 		// Debug.DrawLine(pos + offset, pos + offset + new Vector2(0.25f, 0.0f), Color.red, 0.25f);
