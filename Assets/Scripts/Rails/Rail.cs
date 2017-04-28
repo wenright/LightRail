@@ -6,7 +6,7 @@ using UnityEngine;
 public class Rail : MonoBehaviour {
 
 	public Rail next;
-	protected SpriteRenderer spriteRenderer;
+	public SpriteRenderer spriteRenderer;
 
 	protected RailSpawner railSpawner;
 
