@@ -8,6 +8,7 @@ public class GooglePlay : MonoBehaviour {
 	private readonly string leaderboardID = "CgkInODUkpoYEAIQAA";
 
 	void Awake () {
+		// TODO every time scene is loaded user gets signed out somehow
 		DontDestroyOnLoad(this);
 
 		if (FindObjectsOfType(GetType()).Length > 1) {

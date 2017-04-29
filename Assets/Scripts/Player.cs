@@ -116,7 +116,7 @@ public class Player : MonoBehaviour {
 	private void GameOver () {
 		gameOver = true;
 
-		// railSpawner.speed = 0.0f;
+		railSpawner.speed = 0.0f;
 		// Tween the railspawner speed so that it smoothly goes to 0 after 0.5 seconds
 		// DOTween.To(() => railSpawner.speed, x => railSpawner.speed = x, 0, 0.5f).SetEase(Ease.OutQuad);
 
@@ -131,7 +131,7 @@ public class Player : MonoBehaviour {
 		uiPanel.SetActive(true);
 
 		RectTransform rectTransform = uiPanel.GetComponent<RectTransform>();
-		rectTransform.DOAnchorPos(Vector2.zero, 0.5f, false).SetEase(Ease.OutQuad);
+		rectTransform.DOAnchorPos(Vector2.zero, 0.75f, false).SetEase(Ease.OutBounce);
 
 		gameOverScoreText.text = ((int) railSpawner.score).ToString();
 	}
