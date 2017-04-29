@@ -8,7 +8,7 @@ public class RailSpawner : MonoBehaviour {
 
 	public Vector3 spawnPoint = new Vector3(0, 5, 0);
 	public Vector3 destroyPoint = new Vector3(0, -7, 0);
-	public float speed = 3f;
+	public float speed = 3.0f;
 	public GameObject rail;
 	public GameObject branchRight;
 	public GameObject branchLeft;
@@ -23,10 +23,11 @@ public class RailSpawner : MonoBehaviour {
 
 	public List<Rail> rails;
 
-	public ParticleSystem particleSystem;
+	public ParticleSystem starParticleSystem;
 
 	private float acceleration = 0.1f;
 	private bool hasBeatenHighScore = false;
+	private float savedSpeed = 0.0f;
 
 	void Start () {
 		// TODO remove this for actual game. Useful for debugging though
@@ -55,7 +56,7 @@ public class RailSpawner : MonoBehaviour {
 			}
 		} else {
 			// TODO this causes some jittering with the particle system
-			particleSystem.Simulate(Time.deltaTime * speed / 3, false, false);
+			starParticleSystem.Simulate(Time.deltaTime * speed / 3, false, false);
 
 			score += (speed * Time.deltaTime) / 1.5f;
 			scoreText.text = ((int) score).ToString();
@@ -83,5 +84,19 @@ public class RailSpawner : MonoBehaviour {
 
 	public void RemoveRail (Rail obj) {
 		rails.Remove(obj);
+	}
+
+	public void Pause () {
+		savedSpeed = speed;
+		speed = 0;
+	}
+
+	public void Unpause () {
+		// Wait a little to start the game up again
+		Invoke("UnpauseInvoke", 0.25f);
+	}
+
+	private void UnpauseInvoke () {
+		speed = savedSpeed;
 	}
 }
