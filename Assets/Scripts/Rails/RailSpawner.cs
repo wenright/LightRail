@@ -23,6 +23,8 @@ public class RailSpawner : MonoBehaviour {
 
 	public List<Rail> rails;
 
+	public ParticleSystem particleSystem;
+
 	private float acceleration = 0.1f;
 	private bool hasBeatenHighScore = false;
 
@@ -52,6 +54,9 @@ public class RailSpawner : MonoBehaviour {
 				speed = 3.0f;
 			}
 		} else {
+			// TODO this causes some jittering with the particle system
+			particleSystem.Simulate(Time.deltaTime * speed / 3, false, false);
+
 			score += (speed * Time.deltaTime) / 1.5f;
 			scoreText.text = ((int) score).ToString();
 
