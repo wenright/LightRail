@@ -48,13 +48,7 @@ public class RailSpawner : MonoBehaviour {
 	}
 
 	void Update () {
-		if (player.gameOver) {
-			if (Input.GetMouseButtonDown(0)) {
-				// Restart game
-				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-				speed = 3.0f;
-			}
-		} else {
+		if (!player.gameOver) {
 			// TODO this causes some jittering with the particle system
 			starParticleSystem.Simulate(Time.deltaTime * speed / 3, false, false);
 
@@ -98,5 +92,10 @@ public class RailSpawner : MonoBehaviour {
 
 	private void UnpauseInvoke () {
 		speed = savedSpeed;
+	}
+
+	public void RestartGame () {
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		speed = 3.0f;
 	}
 }

@@ -9,9 +9,9 @@ public class Player : MonoBehaviour {
 	public Rail currentRail;
 	public bool willTakeRightBranch = false;
 	public bool willTakeLeftBranch = false;
-	public Text gameOverText;
-	public Text tapToRetryText;
 	public GooglePlay googlePlayController;
+	public GameObject uiPanel;
+	public Text gameOverScoreText;
 
 	// TODO move this into a different script that controls rotation
 	private float lastPosX;
@@ -115,11 +115,10 @@ public class Player : MonoBehaviour {
 
 	private void GameOver () {
 		gameOver = true;
-		railSpawner.speed = 0.0f;
 
-		// TODO tweening and non max white colors
-		gameOverText.color = Color.white;
-		tapToRetryText.color = Color.white;
+		// railSpawner.speed = 0.0f;
+		// Tween the railspawner speed so that it smoothly goes to 0 after 0.5 seconds
+		// DOTween.To(() => railSpawner.speed, x => railSpawner.speed = x, 0, 0.5f).SetEase(Ease.OutQuad);
 
 		if (railSpawner.score > railSpawner.highScore) {
 			PlayerPrefs.SetFloat("highscore", railSpawner.score);
@@ -128,7 +127,12 @@ public class Player : MonoBehaviour {
 			googlePlayController.UploadScore((int) railSpawner.score);
 		}
 
-		// TODO add a button to show leaderboard, don't just show it automatically
-		googlePlayController.ShowLeaderboardUI();
+		// Tween in the game over ui panel
+		uiPanel.SetActive(true);
+
+		RectTransform rectTransform = uiPanel.GetComponent<RectTransform>();
+		rectTransform.DOAnchorPos(Vector2.zero, 0.5f, false).SetEase(Ease.OutQuad);
+
+		gameOverScoreText.text = ((int) railSpawner.score).ToString();
 	}
 }
