@@ -83,6 +83,7 @@ public class RailSpawner : MonoBehaviour {
 	public void Pause () {
 		savedSpeed = speed;
 		speed = 0;
+		acceleration = 0;
 	}
 
 	public void Unpause () {
@@ -92,6 +93,7 @@ public class RailSpawner : MonoBehaviour {
 
 	private void UnpauseInvoke () {
 		speed = savedSpeed;
+		acceleration = 0.1f;
 	}
 
 	public void RestartGame () {
