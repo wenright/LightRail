@@ -131,7 +131,7 @@ public class Player : MonoBehaviour {
 		uiPanel.SetActive(true);
 
 		RectTransform rectTransform = uiPanel.GetComponent<RectTransform>();
-		rectTransform.DOAnchorPos(Vector2.zero, 0.75f, false).SetEase(Ease.OutBounce);
+		rectTransform.DOAnchorPos(Vector2.zero, 0.5f, false).SetEase(Ease.OutQuad);
 
 		gameOverScoreText.text = ((int) railSpawner.score).ToString();
 	}
