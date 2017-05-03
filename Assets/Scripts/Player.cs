@@ -12,6 +12,7 @@ public class Player : MonoBehaviour {
 	public GooglePlay googlePlayController;
 	public GameObject uiPanel;
 	public Text gameOverScoreText;
+	public ParticleSystem explosion;
 
 	// TODO move this into a different script that controls rotation
 	private float lastPosX;
@@ -127,6 +128,15 @@ public class Player : MonoBehaviour {
 			googlePlayController.UploadScore((int) railSpawner.score);
 		}
 
+		Invoke("TweenInUI", 1.0f);
+
+		Instantiate(explosion, transform.position, Quaternion.identity);
+
+		// Hide player sprite. Alternatively, destroy this object. But then tween in won't be called
+		GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+	}
+
+	private void TweenInUI () {
 		// Tween in the game over ui panel
 		uiPanel.SetActive(true);
 
