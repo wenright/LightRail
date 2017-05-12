@@ -12,6 +12,8 @@ public class Player : MonoBehaviour {
 	public GooglePlay googlePlayController;
 	public GameObject uiPanel;
 	public Text gameOverScoreText;
+	public ParticleSystem explosion;
+	public ParticleSystem stars;
 
 	// TODO move this into a different script that controls rotation
 	private float lastPosX;
@@ -36,7 +38,7 @@ public class Player : MonoBehaviour {
 		}
 
 		// Transfer player to next rail
-		if (currentRail.transform.position.y <= -1f) {
+		if (currentRail.transform.position.y <= -0.5f) {
 			Rail nextRail = currentRail.GetNext();
 
 			if (nextRail is DeadEndRail) {
@@ -127,11 +129,29 @@ public class Player : MonoBehaviour {
 			googlePlayController.UploadScore((int) railSpawner.score);
 		}
 
+		Invoke("TweenInUI", 1.0f);
+
+		Instantiate(explosion, transform.position, Quaternion.identity);
+
+		// Hide player sprite. Alternatively, destroy this object. But then tween in won't be called
+		GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+
+		// Disable the star particle system and slow down each individual particle
+		var emission = stars.emission;
+		emission.enabled = false;
+
+		var limitVel = stars.limitVelocityOverLifetime;
+		limitVel.enabled = true;
+		limitVel.limit = 0.0f;
+		limitVel.dampen = 0.1f;
+	}
+
+	private void TweenInUI () {
 		// Tween in the game over ui panel
 		uiPanel.SetActive(true);
 
 		RectTransform rectTransform = uiPanel.GetComponent<RectTransform>();
-		rectTransform.DOAnchorPos(Vector2.zero, 0.75f, false).SetEase(Ease.OutBounce);
+		rectTransform.DOAnchorPos(Vector2.zero, 0.5f, false).SetEase(Ease.OutQuad);
 
 		gameOverScoreText.text = ((int) railSpawner.score).ToString();
 	}
