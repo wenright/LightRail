@@ -13,6 +13,7 @@ public class Player : MonoBehaviour {
 	public GameObject uiPanel;
 	public Text gameOverScoreText;
 	public ParticleSystem explosion;
+	public ParticleSystem stars;
 
 	// TODO move this into a different script that controls rotation
 	private float lastPosX;
@@ -134,6 +135,15 @@ public class Player : MonoBehaviour {
 
 		// Hide player sprite. Alternatively, destroy this object. But then tween in won't be called
 		GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+
+		// Disable the star particle system and slow down each individual particle
+		var emission = stars.emission;
+		emission.enabled = false;
+
+		var limitVel = stars.limitVelocityOverLifetime;
+		limitVel.enabled = true;
+		limitVel.limit = 0.0f;
+		limitVel.dampen = 0.1f;
 	}
 
 	private void TweenInUI () {
