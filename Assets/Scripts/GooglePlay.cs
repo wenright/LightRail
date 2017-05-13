@@ -30,6 +30,11 @@ public class GooglePlay : MonoBehaviour {
 	public void UploadScore (int score) {
 		// TODO does reporting a score that is lower than a players highest score actually do anything?
 		#if UNITY_ANDROID
+
+		if (!Social.localUser.authenticated) {
+			return;
+		}
+
 		Social.ReportScore(score, leaderboardID, (bool success) => {
 			if (success) {
 				Debug.Log("Successfully uploaded a high score");
@@ -42,6 +47,10 @@ public class GooglePlay : MonoBehaviour {
 
 	public void UnlockAchievement (string achievementID) {
 		#if UNITY_ANDROID
+
+		if (!Social.localUser.authenticated) {
+			return;
+		}
 
 		// Do nothing if this achievement has already been completed
 		if (PlayerPrefs.HasKey(achievementID)) {
@@ -62,6 +71,10 @@ public class GooglePlay : MonoBehaviour {
 	public void IncrementAchievement (string achievementID) {
 		#if UNITY_ANDROID
 
+		if (!Social.localUser.authenticated) {
+			return;
+		}
+
 		// TODO cached incremental achievements
 		PlayGamesPlatform.Instance.IncrementAchievement(achievementID, 1, (bool success) => {
 			if (success) {
@@ -79,12 +92,20 @@ public class GooglePlay : MonoBehaviour {
 
 	public void ShowLeaderboardUI () {
 		#if UNITY_ANDROID
+		if (!Social.localUser.authenticated) {
+			return;
+		}
+
 		PlayGamesPlatform.Instance.ShowLeaderboardUI(leaderboardID);
 		#endif
 	}
 
 	public void ShowAchievementsUI () {
 		#if UNITY_ANDROID
+		if (!Social.localUser.authenticated) {
+			return;
+		}
+		
 		Social.ShowAchievementsUI();
 		#endif
 	}
