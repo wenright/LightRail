@@ -11,7 +11,7 @@ public class GooglePlay : MonoBehaviour {
 		#if UNITY_ANDROID
 
 		// Sign user in
-		if (!Social.localUser.authenticated) {
+		if (PlayerPrefs.GetInt("UseGooglePlay", 0) == 1 && !Social.localUser.authenticated) {
 			PlayGamesPlatform.DebugLogEnabled = true;
 			PlayGamesPlatform.Activate();
 			
