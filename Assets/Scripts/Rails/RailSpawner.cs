@@ -23,9 +23,10 @@ public class RailSpawner : MonoBehaviour {
 
 	public List<Rail> rails;
 
+	public AdManager adManager;
+
 	private float acceleration = 0.1f;
 	private bool hasBeatenHighScore = false;
-	private float savedSpeed = 0.0f;
 
 	void Start () {
 		// TODO remove this for actual game. Useful for debugging though
@@ -50,7 +51,6 @@ public class RailSpawner : MonoBehaviour {
 			score += (speed * Time.deltaTime) / 1.5f;
 			scoreText.text = ((int) score).ToString();
 
-			// TODO check highscore, update it if beaten
 			if (score > highScore) {
 				if (!hasBeatenHighScore) {
 					hasBeatenHighScore = true;
@@ -75,24 +75,15 @@ public class RailSpawner : MonoBehaviour {
 		rails.Remove(obj);
 	}
 
-	public void Pause () {
-		savedSpeed = speed;
-		speed = 0;
-		acceleration = 0;
-	}
-
-	public void Unpause () {
-		// Wait a little to start the game up again
-		Invoke("UnpauseInvoke", 0.25f);
-	}
-
-	private void UnpauseInvoke () {
-		speed = savedSpeed;
-		acceleration = 0.1f;
-	}
-
 	public void RestartGame () {
+		if (adManager.ShouldPlayAd()) {
+			adManager.PlayAd();
+		} else {
+			ResetScene();
+		}
+	}
+
+	public void ResetScene () {
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-		speed = 3.0f;
 	}
 }

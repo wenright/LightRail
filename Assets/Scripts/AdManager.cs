@@ -11,16 +11,10 @@ public class AdManager : MonoBehaviour {
 
 		// TODO should this be in a playerprefs dict?
 		numTimesPlayed++;
-
-		if (numTimesPlayed % 3 == 0) {
-			PlayAd();
-		}
 	}
 
-	private void PlayAd () {
+	public void PlayAd () {
 		if (Advertisement.IsReady()) {
-			railSpawner.Pause();
-
 			ShowOptions options = new ShowOptions { resultCallback = HandleShowResult };
 			Advertisement.Show(options);
 		}
@@ -38,8 +32,12 @@ public class AdManager : MonoBehaviour {
 				break;
 		}
 
-		railSpawner.Unpause();
+		railSpawner.ResetScene();
 	}
 	#endif
+
+	public bool ShouldPlayAd () {
+		return numTimesPlayed % 3 == 0;
+	}
 	
 }
