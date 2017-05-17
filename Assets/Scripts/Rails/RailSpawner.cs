@@ -24,6 +24,7 @@ public class RailSpawner : MonoBehaviour {
 	public List<Rail> rails;
 
 	public AdManager adManager;
+	public FadeImage fillImage;
 
 	private float acceleration = 0.1f;
 	private bool hasBeatenHighScore = false;
@@ -44,6 +45,8 @@ public class RailSpawner : MonoBehaviour {
 
 		highScore = PlayerPrefs.GetFloat("highscore", 0.0f);
 		highScoreText.text = "HI " + ((int) highScore).ToString();
+
+		// TODO maybe wait a few seconds before setting the rail speed from 0
 	}
 
 	void Update () {
@@ -76,6 +79,12 @@ public class RailSpawner : MonoBehaviour {
 	}
 
 	public void RestartGame () {
+		// TODO maybe this should be called from the OnComplete of the fadeout, in case the fadout duration is changed in the future
+		Invoke("DelayedRestartGame", 0.75f);
+		fillImage.FadeIn();
+	}
+
+	private void DelayedRestartGame () {
 		if (adManager.ShouldPlayAd()) {
 			adManager.PlayAd();
 		} else {
