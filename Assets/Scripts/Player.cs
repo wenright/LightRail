@@ -90,10 +90,11 @@ public class Player : MonoBehaviour {
 		BranchRail branchRail = null;
 
 		// TODO should we allow branching if the player is already on the branch rail? Or maybe only partway down the rail
-		if (currentRail is BranchRail) {
-			// branchRail = currentRail as BranchRail;
+		if (currentRail is BranchRail && currentRail.transform.position.y >= -0.1f) {
+			// TODO maybe add a spark particle system here since the train needs to jump from the straight rail to the branched one
+			branchRail = currentRail as BranchRail;
 
-			// TODO here the player is branching in the middle of a branch rail, so maybe tween player position to new position
+			// TODO the rotation animation is jumpy when switching mid branch
 		} else if (currentRail.next is BranchRail) {
 			branchRail = currentRail.next as BranchRail;
 		}
