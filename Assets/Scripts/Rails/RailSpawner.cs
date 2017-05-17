@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.PostProcessing;
 using DG.Tweening;
 
 public class RailSpawner : MonoBehaviour {
@@ -13,6 +14,7 @@ public class RailSpawner : MonoBehaviour {
 	public GameObject branchRight;
 	public GameObject branchLeft;
 	public GameObject deadEnd;
+	public PostProcessingBehaviour postProcessingStack;
 
 	public UnityEngine.UI.Text scoreText;
 	public UnityEngine.UI.Text highScoreText;
@@ -43,6 +45,10 @@ public class RailSpawner : MonoBehaviour {
 
 		highScore = PlayerPrefs.GetFloat("highscore", 0.0f);
 		highScoreText.text = "HI " + ((int) highScore).ToString();
+
+		if (!PlayerPrefs.HasKey("HighQuality")) {
+			postProcessingStack.enabled = true;
+		}
 	}
 
 	void Update () {
