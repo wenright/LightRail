@@ -79,7 +79,7 @@ public class Player : MonoBehaviour {
 			transform.rotation = Quaternion.identity;
 		}
 
-		if (Input.GetMouseButtonDown(0)) {
+		if (Input.GetMouseButtonUp(0)) {
 			Swipe(Directions.Left);
 			Swipe(Directions.Right);
 		}
@@ -88,8 +88,12 @@ public class Player : MonoBehaviour {
 	// TODO Once 3 directional branches are added, swipe direction will become important
 	private void Swipe (Directions direction) {
 		BranchRail branchRail = null;
+
+		// TODO should we allow branching if the player is already on the branch rail? Or maybe only partway down the rail
 		if (currentRail is BranchRail) {
-			branchRail = currentRail as BranchRail;
+			// branchRail = currentRail as BranchRail;
+
+			// TODO here the player is branching in the middle of a branch rail, so maybe tween player position to new position
 		} else if (currentRail.next is BranchRail) {
 			branchRail = currentRail.next as BranchRail;
 		}
