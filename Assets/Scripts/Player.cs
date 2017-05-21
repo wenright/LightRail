@@ -23,10 +23,6 @@ public class Player : MonoBehaviour {
 
 	private RailSpawner railSpawner;
 
-	// TODO remove these if using tapping instead of swiping
-	private enum Directions {Left, Right};
-	private Directions direction;
-
 	// Use this for initialization
 	void Start () {
 		railSpawner = GameObject.FindWithTag("GameController").GetComponent<RailSpawner>();
@@ -79,14 +75,17 @@ public class Player : MonoBehaviour {
 			transform.rotation = Quaternion.identity;
 		}
 
-		if (Input.GetMouseButtonUp(0)) {
-			Swipe(Directions.Left);
-			Swipe(Directions.Right);
-		}
+		#if UNITY_EDITOR
+			if (Input.GetKeyDown("right")) {
+				Swipe(SwipeDetection.Directions.Right);
+			} else if (Input.GetKeyDown("left")) {
+				Swipe(SwipeDetection.Directions.Left);
+			}
+		#endif
 	}
 
 	// TODO Once 3 directional branches are added, swipe direction will become important
-	private void Swipe (Directions direction) {
+	public void Swipe (SwipeDetection.Directions direction) {
 		BranchRail branchRail = null;
 
 		// TODO should we allow branching if the player is already on the branch rail? Or maybe only partway down the rail
@@ -102,10 +101,10 @@ public class Player : MonoBehaviour {
 		// TODO Allow undoing of swipes (Swipe right, then swipe left before reaching branch to go straight)
 		// TODO how far along should changing be allowed? up to two rails away? and can you change on the current rail?
 		if (branchRail) {
-			if (direction == Directions.Left && !branchRail.branchRight) {
+			if (direction == SwipeDetection.Directions.Left && !branchRail.branchRight) {
 				willTakeLeftBranch = true;
 				branchRail.SwapAlphas();				
-			} else if (direction == Directions.Right && branchRail.branchRight) {
+			} else if (direction == SwipeDetection.Directions.Right && branchRail.branchRight) {
 				willTakeRightBranch = true;
 				branchRail.SwapAlphas();				
 			}
