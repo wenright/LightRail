@@ -2,8 +2,11 @@
 using GooglePlayGames.BasicApi;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class SignIn : MonoBehaviour {
+
+	public UnityEngine.UI.Text signInText;
 
 	void Awake () {
 		#if UNITY_ANDROID
@@ -20,8 +23,10 @@ public class SignIn : MonoBehaviour {
 					Debug.LogError("Failed signing in!");
 				}
 
-				// Wait a second before starting the game so that the welcome back screen doesn't get in the way
-				Invoke("StartGame", 1.0f);
+				// Wait a second or so to start the game so that the welcome message doesn't cover up incoming dead ends
+				signInText.DOFade(0, 0.5f)
+					.SetEase(Ease.OutQuad)
+					.OnComplete(() => StartGame());
 			});
 		}
 
