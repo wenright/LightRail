@@ -1,6 +1,7 @@
 ﻿using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms;
 
 public class GooglePlay : MonoBehaviour {
@@ -12,23 +13,13 @@ public class GooglePlay : MonoBehaviour {
 
 		// Sign user in
 		if (!Social.localUser.authenticated) {
-			PlayGamesPlatform.DebugLogEnabled = true;
-			PlayGamesPlatform.Activate();
-			
-			PlayGamesPlatform.Instance.Authenticate((bool success) => {
-				if (success) {
-					Debug.Log("Successfully signed in");
-				} else {
-					Debug.LogError("Failed signing in!");
-				}
-			});
+			// TODO Try signing in again?
 		}
 
 		#endif
 	}
 	
 	public void UploadScore (int score) {
-		// TODO does reporting a score that is lower than a players highest score actually do anything?
 		#if UNITY_ANDROID
 
 		if (!Social.localUser.authenticated) {
