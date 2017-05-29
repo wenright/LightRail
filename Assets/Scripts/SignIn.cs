@@ -2,13 +2,21 @@
 using GooglePlayGames.BasicApi;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class SignIn : MonoBehaviour {
 
-	public UnityEngine.UI.Text signInText;
+	public Text signInText;
+	public Transform spinnerImage;
+	public Sprite checkSprite;
 
 	void Awake () {
+		// Rotate spinner indefinitely
+		spinnerImage.DORotate(new Vector3(0, 0, -350), 1.0f, RotateMode.WorldAxisAdd)
+			.SetEase(Ease.Linear)
+			.SetLoops(-1);
+
 		#if UNITY_ANDROID
 
 		// Sign user in
@@ -27,6 +35,15 @@ public class SignIn : MonoBehaviour {
 				signInText.DOFade(0, 0.5f)
 					.SetEase(Ease.OutQuad)
 					.OnComplete(() => StartGame());
+
+				DOTween.Pause(spinnerImage);
+
+				Image newImage = spinnerImage.gameObject.GetComponent<Image>();
+
+				newImage.overrideSprite = checkSprite;
+
+				newImage.DOFade(0, 0.5f)
+					.SetEase(Ease.OutQuad);
 			});
 		}
 
