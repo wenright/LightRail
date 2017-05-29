@@ -37,6 +37,7 @@ public class SignIn : MonoBehaviour {
 					.OnComplete(() => StartGame());
 
 				DOTween.Pause(spinnerImage);
+				spinnerImage.rotation = Quaternion.identity;
 
 				Image newImage = spinnerImage.gameObject.GetComponent<Image>();
 
