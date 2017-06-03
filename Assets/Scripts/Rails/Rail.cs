@@ -175,19 +175,12 @@ public class Rail : MonoBehaviour {
 
 		Collider2D[] collisions = Physics2D.OverlapCircleAll(pos + offset, 0.25f);
 
-		print(collisions.Length);
+		// Draws a small line showing where the test point is
+		// Debug.DrawLine(pos + offset, pos + offset + new Vector2(0.25f, 0.0f), Color.red, 0.25f);
 
 		if (collisions.Length > 0) {
-
-			// Draws a small line showing where the test point is
-			Debug.DrawLine(pos + offset, pos + offset + new Vector2(0.25f, 0.0f), Color.red, 0.25f);
-
 			return collisions[0].gameObject.GetComponent<Rail>();
 		}
-
-
-		// Draws a small line showing where the test point is
-		Debug.DrawLine(pos + offset, pos + offset + new Vector2(0.25f, 0.0f), Color.green, 0.25f);
 
 		return null;
 	}
