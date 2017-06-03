@@ -31,7 +31,7 @@ public class RailSpawner : MonoBehaviour {
 
 	void Start () {
 		// TODO remove this for actual game. Useful for debugging though
-		// Random.InitState(321123);
+		Random.InitState(321123);
 
 		rails = new List<Rail>();
 

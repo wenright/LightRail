@@ -69,7 +69,14 @@ public class Player : MonoBehaviour {
 		if (Mathf.Abs(vx) >= 0.000001f) {
 			float rotZ = -Mathf.Atan2(railSpawner.speed * Time.deltaTime, vx);
 			float rotationOffset = 90.0f;
-			transform.rotation = Quaternion.Euler(0, 0, rotZ * Mathf.Rad2Deg - rotationOffset);
+			float currentRotation = transform.eulerAngles.z;
+			float targetRotation = rotZ * Mathf.Rad2Deg - rotationOffset;
+			float currentAngularVelocity = 0.0f;
+			float smoothing = 0.1f;
+			float dampedRotation = Mathf.SmoothDampAngle(currentRotation, targetRotation, ref currentAngularVelocity, smoothing);
+
+			transform.rotation = Quaternion.Euler(0, 0, dampedRotation);
+
 			lastPosX = transform.position.x;
 		} else {
 			transform.rotation = Quaternion.identity;

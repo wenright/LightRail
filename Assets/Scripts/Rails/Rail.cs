@@ -100,7 +100,7 @@ public class Rail : MonoBehaviour {
 	}
 
 	protected virtual Rail SpawnRail () {
-		return SpawnRail(new Vector3(0, 1.5f, 0));
+		return SpawnRail(new Vector3(0, 1f, 0));
 	}
 
 	public bool IsHead () {
@@ -171,16 +171,23 @@ public class Rail : MonoBehaviour {
 
 	private Rail GetRailToDir (int dir) {
 		Vector2 pos = new Vector2(transform.position.x, transform.position.y);
-		Vector2 offset = new Vector2(dir * 0.625f, 1.0f);
-
-		// Draws a small line showing where the test point is
-		// Debug.DrawLine(pos + offset, pos + offset + new Vector2(0.25f, 0.0f), Color.red, 0.25f);
+		Vector2 offset = new Vector2(dir / 2.0f, 1.0f);
 
 		Collider2D[] collisions = Physics2D.OverlapCircleAll(pos + offset, 0.25f);
 
+		print(collisions.Length);
+
 		if (collisions.Length > 0) {
+
+			// Draws a small line showing where the test point is
+			Debug.DrawLine(pos + offset, pos + offset + new Vector2(0.25f, 0.0f), Color.red, 0.25f);
+
 			return collisions[0].gameObject.GetComponent<Rail>();
 		}
+
+
+		// Draws a small line showing where the test point is
+		Debug.DrawLine(pos + offset, pos + offset + new Vector2(0.25f, 0.0f), Color.green, 0.25f);
 
 		return null;
 	}

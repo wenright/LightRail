@@ -5,8 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class CurveGenerator : MonoBehaviour {
 
-	private float height = 1.5f;
-	private float width = 0.32f;
+	private float height = 1f;
+	private float width = 0.25f;
 	private LineRenderer lineRenderer;
 
 	void Start () {

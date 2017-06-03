@@ -27,7 +27,7 @@ public class BranchRail : Rail {
 			sign = 1;
 		}
 
-		branchedRail = SpawnRail(new Vector3(0.625f * sign, 1.5f, 0));
+		branchedRail = SpawnRail(new Vector3(sign * 0.5f, 1f, 0));
 		return next;
 	}
 
