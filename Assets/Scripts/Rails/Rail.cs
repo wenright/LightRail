@@ -171,7 +171,7 @@ public class Rail : MonoBehaviour {
 
 	private Rail GetRailToDir (int dir) {
 		Vector2 pos = new Vector2(transform.position.x, transform.position.y);
-		Vector2 offset = new Vector2(dir / 2.0f, 1.0f);
+		Vector2 offset = new Vector2(dir / 2.0f, 0.75f);
 
 		Collider2D[] collisions = Physics2D.OverlapCircleAll(pos + offset, 0.25f);
 
