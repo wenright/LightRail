@@ -26,7 +26,7 @@ public class RailSpawner : MonoBehaviour {
 	public AdManager adManager;
 	public FadeImage fillImage;
 
-	private float acceleration = 0.1f;
+	private float acceleration = 0.15f;
 	private bool hasBeatenHighScore = false;
 
 	void Start () {

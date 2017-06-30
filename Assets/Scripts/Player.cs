@@ -41,6 +41,18 @@ public class Player : MonoBehaviour {
 		if (currentRail.transform.position.y <= -0.15f) {
 			Rail nextRail = currentRail.GetNext();
 
+			if (nextRail is BranchRail && WillTakeBranch(nextRail)) {
+				float rotateTime =  (1 / railSpawner.speed) / 1.5f;
+				int dir = 1;
+
+				if ((nextRail as BranchRail).branchRight) {
+					dir = -1;
+				}
+
+				transform.DORotate(new Vector3(0, 0, 35 * dir), rotateTime).SetEase(Ease.InQuad)
+					.OnComplete(() => transform.DORotate(Vector3.zero, rotateTime).SetEase(Ease.OutSine));
+			}
+
 			if (nextRail is DeadEndRail) {
 				if (!gameOver) {
 					GameOver();
@@ -79,7 +91,7 @@ public class Player : MonoBehaviour {
 
 			lastPosX = transform.position.x;
 		} else {
-			transform.rotation = Quaternion.identity;
+			// transform.rotation = Quaternion.identity;
 		}
 
 		#if UNITY_EDITOR
@@ -113,7 +125,7 @@ public class Player : MonoBehaviour {
 				branchRail.SwapAlphas();				
 			} else if (direction == SwipeDetection.Directions.Right && branchRail.branchRight) {
 				willTakeRightBranch = true;
-				branchRail.SwapAlphas();				
+				branchRail.SwapAlphas();
 			}
 		}
 	}
@@ -124,6 +136,10 @@ public class Player : MonoBehaviour {
 
 	public bool WillTakeBranch () {
 		return ((currentRail as BranchRail).branchRight && willTakeRightBranch) || (!(currentRail as BranchRail).branchRight && willTakeLeftBranch);
+	}
+
+	public bool WillTakeBranch (Rail railToTest) {
+		return ((railToTest as BranchRail).branchRight && willTakeRightBranch) || (!(railToTest as BranchRail).branchRight && willTakeLeftBranch);
 	}
 
 	private void GameOver () {
