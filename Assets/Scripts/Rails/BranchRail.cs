@@ -27,7 +27,7 @@ public class BranchRail : Rail {
 			sign = 1;
 		}
 
-		branchedRail = SpawnRail(new Vector3(0.625f * sign, 1.5f, 0));
+		branchedRail = SpawnRail(new Vector3(sign * 0.5f, 1f, 0));
 		return next;
 	}
 
@@ -90,11 +90,11 @@ public class BranchRail : Rail {
 				sign = 1;
 			}
 
-			float percentage = transform.position.y + 0.625f;
+			float percentage = transform.position.y + 0.25f;
 
 			percentage = Mathf.Clamp(percentage, 0, 1);
 
-			return base.GetX() + sign * 0.625f * Mathf.Cos(percentage * (Mathf.PI / 2));
+			return base.GetX() + sign * 0.5f * Mathf.Cos(percentage * (Mathf.PI / 2));
 		} else {
 			return base.GetX();
 		}

@@ -12,7 +12,7 @@ public class Player : MonoBehaviour {
 	public GooglePlay googlePlayController;
 	public GameObject uiPanel;
 	public Text gameOverScoreText;
-	public ParticleSystem explosion;
+	public GameObject explosion;
 	public ParticleSystem stars;
 
 	// TODO move this into a different script that controls rotation
@@ -38,7 +38,7 @@ public class Player : MonoBehaviour {
 		}
 
 		// Transfer player to next rail
-		if (currentRail.transform.position.y <= -0.5f) {
+		if (currentRail.transform.position.y <= -0.15f) {
 			Rail nextRail = currentRail.GetNext();
 
 			if (nextRail is DeadEndRail) {
@@ -67,9 +67,16 @@ public class Player : MonoBehaviour {
 		// TODO branch rails still have some jerky parts at the beginning and the end
 		float vx = lastPosX - transform.position.x;
 		if (Mathf.Abs(vx) >= 0.000001f) {
-			float rotZ = -Mathf.Atan2(railSpawner.speed * Time.deltaTime, vx);
-			float rotationOffset = 90.0f;
-			transform.rotation = Quaternion.Euler(0, 0, rotZ * Mathf.Rad2Deg - rotationOffset);
+			// float rotZ = -Mathf.Atan2(railSpawner.speed * Time.deltaTime, vx);
+			// float rotationOffset = 90.0f;
+			// float currentRotation = transform.eulerAngles.z;
+			// float targetRotation = rotZ * Mathf.Rad2Deg - rotationOffset;
+			// float currentAngularVelocity = 0.0f;
+			// float smoothing = 0.1f;
+			// float dampedRotation = Mathf.SmoothDampAngle(currentRotation, targetRotation, ref currentAngularVelocity, smoothing);
+
+			// transform.rotation = Quaternion.Euler(0, 0, dampedRotation);
+
 			lastPosX = transform.position.x;
 		} else {
 			transform.rotation = Quaternion.identity;
