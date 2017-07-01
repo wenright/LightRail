@@ -28,6 +28,9 @@ public class Player : MonoBehaviour {
 		railSpawner = GameObject.FindWithTag("GameController").GetComponent<RailSpawner>();
 
 		lastPos = new Vector2(transform.position.x, 0);
+
+		// Used to test gameplay when device performance is poor
+		// Application.targetFrameRate = 15;
 	}
 	
 	// Update is called once per frame
@@ -67,8 +70,17 @@ public class Player : MonoBehaviour {
 
 		// Rotate player so that they follow the path of the rail
 		// TODO branch rails still have some jerky parts at the beginning and the end
-		float angle = Vector2.Angle(thisPosition - lastPos, Vector2.up);
-		transform.rotation = Quaternion.Euler(0, 0, angle);
+		float targetAngle = Vector2.Angle(thisPosition - lastPos, Vector2.up) * Mathf.Sign(lastPos.x - thisPosition.x);
+
+		float deltaAngle = Mathf.DeltaAngle(transform.rotation.eulerAngles.z, targetAngle);
+		float maxDeltaAngle = Time.deltaTime * 500;
+		int sign = (int) Mathf.Sign(deltaAngle);
+		
+		if (Mathf.Abs(deltaAngle) > maxDeltaAngle) {
+			deltaAngle = sign * maxDeltaAngle;
+		}
+
+		transform.Rotate(0, 0, deltaAngle);
 
 		lastPos = thisPosition - new Vector2(0, Time.deltaTime * railSpawner.speed);
 

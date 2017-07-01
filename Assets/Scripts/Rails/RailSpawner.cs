@@ -8,7 +8,7 @@ public class RailSpawner : MonoBehaviour {
 
 	public Vector3 spawnPoint = new Vector3(0, 5, 0);
 	public Vector3 destroyPoint = new Vector3(0, -7, 0);
-	public float speed = 3.0f;
+	public float speed = 4.0f;
 	public GameObject rail;
 	public GameObject branchRight;
 	public GameObject branchLeft;
@@ -26,7 +26,7 @@ public class RailSpawner : MonoBehaviour {
 	public AdManager adManager;
 	public FadeImage fillImage;
 
-	private float acceleration = 0.1f;
+	private float acceleration = 0.075f;
 	private bool hasBeatenHighScore = false;
 
 	void Start () {
