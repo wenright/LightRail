@@ -7,6 +7,7 @@ using DG.Tweening;
 public class Player : MonoBehaviour {
 
 	public Rail currentRail;
+	public Rail nextRail;
 	public bool willTakeRightBranch = false;
 	public bool willTakeLeftBranch = false;
 	public GooglePlay googlePlayController;
@@ -14,9 +15,6 @@ public class Player : MonoBehaviour {
 	public Text gameOverScoreText;
 	public GameObject explosion;
 	public ParticleSystem stars;
-
-	// TODO move this into a different script that controls rotation
-	private float lastPosX;
 
 	// TODO there should be a game controller that deals with gameOver states
 	public bool gameOver = false;
@@ -26,8 +24,6 @@ public class Player : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		railSpawner = GameObject.FindWithTag("GameController").GetComponent<RailSpawner>();
-
-		lastPosX = transform.position.x;
 	}
 	
 	// Update is called once per frame
@@ -38,19 +34,11 @@ public class Player : MonoBehaviour {
 		}
 
 		// Transfer player to next rail
-		if (currentRail.transform.position.y <= -0.15f) {
-			Rail nextRail = currentRail.GetNext();
+		if (currentRail.transform.position.y <= -0.2f) {
+			nextRail = currentRail.GetNext();
 
 			if (nextRail is BranchRail && WillTakeBranch(nextRail)) {
-				float rotateTime =  (1 / railSpawner.speed) / 1.5f;
-				int dir = 1;
-
-				if ((nextRail as BranchRail).branchRight) {
-					dir = -1;
-				}
-
-				transform.DORotate(new Vector3(0, 0, 35 * dir), rotateTime).SetEase(Ease.InQuad)
-					.OnComplete(() => transform.DORotate(Vector3.zero, rotateTime).SetEase(Ease.OutSine));
+				TweenRotation();
 			}
 
 			if (nextRail is DeadEndRail) {
@@ -74,25 +62,6 @@ public class Player : MonoBehaviour {
 		}
 
 		transform.position = new Vector3(currentRail.GetX(), 0, 0);
-
-		// Rotate player so that they follow the path of the rail
-		// TODO branch rails still have some jerky parts at the beginning and the end
-		float vx = lastPosX - transform.position.x;
-		if (Mathf.Abs(vx) >= 0.000001f) {
-			// float rotZ = -Mathf.Atan2(railSpawner.speed * Time.deltaTime, vx);
-			// float rotationOffset = 90.0f;
-			// float currentRotation = transform.eulerAngles.z;
-			// float targetRotation = rotZ * Mathf.Rad2Deg - rotationOffset;
-			// float currentAngularVelocity = 0.0f;
-			// float smoothing = 0.1f;
-			// float dampedRotation = Mathf.SmoothDampAngle(currentRotation, targetRotation, ref currentAngularVelocity, smoothing);
-
-			// transform.rotation = Quaternion.Euler(0, 0, dampedRotation);
-
-			lastPosX = transform.position.x;
-		} else {
-			// transform.rotation = Quaternion.identity;
-		}
 
 		#if UNITY_EDITOR
 			if (Input.GetKeyDown("right")) {
@@ -181,5 +150,17 @@ public class Player : MonoBehaviour {
 		rectTransform.DOAnchorPos(Vector2.zero, 0.5f, false).SetEase(Ease.OutQuad);
 
 		gameOverScoreText.text = ((int) railSpawner.score).ToString();
+	}
+
+	private void TweenRotation () {
+		float rotateTime = (1 / railSpawner.speed) / 1.5f;
+		int dir = 1;
+
+		if ((nextRail as BranchRail).branchRight) {
+			dir = -1;
+		}
+
+		transform.DORotate(new Vector3(0, 0, 30 * dir), rotateTime).SetEase(Ease.OutCirc)
+			.OnComplete(() => transform.DORotate(Vector3.zero, rotateTime).SetEase(Ease.OutCirc));
 	}
 }

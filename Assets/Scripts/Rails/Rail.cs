@@ -19,11 +19,11 @@ public class Rail : MonoBehaviour {
 	
 	void Update () {
 		// Highlights the player's current rail in red
-		// if (railSpawner.player.currentRail == this) {
-		// 	spriteRenderer.color = Color.red;
-		// } else {
-		// 	spriteRenderer.color = Color.white;
-		// }
+		if (railSpawner.player.currentRail == this) {
+			spriteRenderer.color = Color.red;
+		} else {
+			spriteRenderer.color = Color.white;
+		}
 
 		transform.Translate(Vector2.up * -railSpawner.speed * Time.deltaTime);
 
