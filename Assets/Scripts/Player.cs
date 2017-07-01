@@ -16,7 +16,7 @@ public class Player : MonoBehaviour {
 	public ParticleSystem stars;
 
 	// TODO move this into a different script that controls rotation
-	private float lastPosX;
+	private Vector2 lastPos;
 
 	// TODO there should be a game controller that deals with gameOver states
 	public bool gameOver = false;
@@ -27,7 +27,7 @@ public class Player : MonoBehaviour {
 	void Start () {
 		railSpawner = GameObject.FindWithTag("GameController").GetComponent<RailSpawner>();
 
-		lastPosX = transform.position.x;
+		lastPos = new Vector2(transform.position.x, 0);
 	}
 	
 	// Update is called once per frame
@@ -63,24 +63,14 @@ public class Player : MonoBehaviour {
 
 		transform.position = new Vector3(currentRail.GetX(), 0, 0);
 
+		Vector2 thisPosition = new Vector2(transform.position.x, 0);
+
 		// Rotate player so that they follow the path of the rail
 		// TODO branch rails still have some jerky parts at the beginning and the end
-		float vx = lastPosX - transform.position.x;
-		if (Mathf.Abs(vx) >= 0.000001f) {
-			// float rotZ = -Mathf.Atan2(railSpawner.speed * Time.deltaTime, vx);
-			// float rotationOffset = 90.0f;
-			// float currentRotation = transform.eulerAngles.z;
-			// float targetRotation = rotZ * Mathf.Rad2Deg - rotationOffset;
-			// float currentAngularVelocity = 0.0f;
-			// float smoothing = 0.1f;
-			// float dampedRotation = Mathf.SmoothDampAngle(currentRotation, targetRotation, ref currentAngularVelocity, smoothing);
+		float angle = Vector2.Angle(thisPosition - lastPos, Vector2.up);
+		transform.rotation = Quaternion.Euler(0, 0, angle);
 
-			// transform.rotation = Quaternion.Euler(0, 0, dampedRotation);
-
-			lastPosX = transform.position.x;
-		} else {
-			transform.rotation = Quaternion.identity;
-		}
+		lastPos = thisPosition - new Vector2(0, Time.deltaTime * railSpawner.speed);
 
 		#if UNITY_EDITOR
 			if (Input.GetKeyDown("right")) {
