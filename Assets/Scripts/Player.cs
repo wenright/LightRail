@@ -12,7 +12,7 @@ public class Player : MonoBehaviour {
 	public GooglePlay googlePlayController;
 	public GameObject uiPanel;
 	public Text gameOverScoreText;
-	public ParticleSystem explosion;
+	public GameObject explosion;
 	public ParticleSystem stars;
 
 	// TODO move this into a different script that controls rotation
