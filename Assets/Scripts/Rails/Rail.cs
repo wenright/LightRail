@@ -63,13 +63,15 @@ public class Rail : MonoBehaviour {
 		bool isInPlay = railSpawner.player.currentRail.CanRailBeReached(this);
 
 		// Prevents rails from branching at inconvenien times where a crazy fast reaction time is required
+		// TODO does this change with screen resolution?
 		Rail closestBranch = railSpawner.player.GetClosestBranch();
 		float closestBranchDist = 5;
 		if (closestBranch != null) {
 			closestBranchDist = closestBranch.transform.position.y;			
 		}
 
-		if ((Random.value >= 0.2 && railSpawner.player.currentRail.GetPathCount() >= 2) || (!isInPlay && Random.value >= 0.1)) {
+		// TODO isinplay value threshold: higher (0.75) = better looking but may result in poor performance with long chains, low (0.1) looks bad
+		if ((Random.value >= 0.2 && railSpawner.player.currentRail.GetPathCount() >= 2) || (!isInPlay && Random.value >= 0.625)) {
 			// TODO generalize for all branch types
 			if (!(this is BranchRail) && closestBranchDist >= 2) {
 				return true;
