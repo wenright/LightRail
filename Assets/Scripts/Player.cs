@@ -102,6 +102,7 @@ public class Player : MonoBehaviour {
 		Rail branchCandidate = currentRail;
 		BranchRail branchRail = null;
 
+		// TODO maybe use a for loop to prevent getting stuck if something goes wrong
 		while (!(branchCandidate is BranchRail)) {
 			if (branchCandidate == null) {
 				return;
