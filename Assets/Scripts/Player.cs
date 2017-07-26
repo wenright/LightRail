@@ -95,21 +95,26 @@ public class Player : MonoBehaviour {
 
 	// TODO Once 3 directional branches are added, swipe direction will become important
 	public void Swipe (SwipeDetection.Directions direction) {
+		if (currentRail == null) {
+			return;
+		}
+
+		Rail branchCandidate = currentRail;
 		BranchRail branchRail = null;
 
-		// TODO should we allow branching if the player is already on the branch rail? Or maybe only partway down the rail
-		if (currentRail is BranchRail && currentRail.transform.position.y >= -0.1f) {
-			// TODO maybe add a spark particle system here since the train needs to jump from the straight rail to the branched one
-			branchRail = currentRail as BranchRail;
+		while (!(branchCandidate is BranchRail)) {
+			if (branchCandidate == null) {
+				return;
+			}
 
-			// TODO the rotation animation is jumpy when switching mid branch
-		} else if (currentRail.next is BranchRail) {
-			branchRail = currentRail.next as BranchRail;
+			branchCandidate = branchCandidate.next;
 		}
 
 		// TODO Allow undoing of swipes (Swipe right, then swipe left before reaching branch to go straight)
 		// TODO how far along should changing be allowed? up to two rails away? and can you change on the current rail?
-		if (branchRail) {
+		if (branchCandidate != null) {
+			branchRail = branchCandidate as BranchRail;
+
 			if (direction == SwipeDetection.Directions.Left && !branchRail.branchRight) {
 				willTakeLeftBranch = true;
 				branchRail.SwapAlphas();				
