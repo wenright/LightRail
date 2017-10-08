@@ -30,7 +30,7 @@ public class Player : MonoBehaviour {
 		lastPos = new Vector2(transform.position.x, 0);
 
 		// Used to test gameplay when device performance is poor
-		// Application.targetFrameRate = 15;
+		Application.targetFrameRate = 60;
 	}
 	
 	// Update is called once per frame

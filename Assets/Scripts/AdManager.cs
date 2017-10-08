@@ -4,6 +4,7 @@ using UnityEngine.Advertisements;
 public class AdManager : MonoBehaviour {
 
 	private static int numTimesPlayed = 0;
+	private const int numGamesBetweenAds = 7;
 	private RailSpawner railSpawner;
 
 	void Awake () {
@@ -37,7 +38,7 @@ public class AdManager : MonoBehaviour {
 	#endif
 
 	public bool ShouldPlayAd () {
-		return numTimesPlayed % 3 == 0;
+		return numTimesPlayed % numGamesBetweenAds == 0;
 	}
 	
 }
