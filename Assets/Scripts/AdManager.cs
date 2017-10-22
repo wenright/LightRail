@@ -10,7 +10,6 @@ public class AdManager : MonoBehaviour {
 	void Awake () {
 		railSpawner = GameObject.FindWithTag("GameController").GetComponent<RailSpawner>();
 
-		// TODO should this be in a playerprefs dict?
 		numTimesPlayed++;
 	}
 
