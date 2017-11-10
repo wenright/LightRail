@@ -7,6 +7,7 @@ using UnityEngine.SocialPlatforms;
 public class GooglePlay : MonoBehaviour {
 
 	private readonly string leaderboardID = "CgkInODUkpoYEAIQAA";
+	private GameObject toast;
 
 	void Awake () {
 		#if UNITY_ANDROID
@@ -14,6 +15,9 @@ public class GooglePlay : MonoBehaviour {
 		// Sign user in
 		if (!Social.localUser.authenticated) {
 			// TODO Try signing in again?
+
+			toast = GameObject.FindWithTag("Toast") as GameObject;
+			toast.GetComponent<Toast>().ShowToast("Unable to sign in to Google Play");
 		}
 
 		#endif
