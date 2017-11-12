@@ -13,6 +13,7 @@ public class RailSpawner : MonoBehaviour {
 	public GameObject branchRight;
 	public GameObject branchLeft;
 	public GameObject deadEnd;
+	public GameObject coin;
 
 	public UnityEngine.UI.Text scoreText;
 	public UnityEngine.UI.Text highScoreText;
@@ -37,11 +38,6 @@ public class RailSpawner : MonoBehaviour {
 
 		GameObject playerObject = GameObject.FindWithTag("Player");
 		player = playerObject.GetComponent<Player>();
-
-		rail = Resources.Load("rail") as GameObject;
-		branchRight = Resources.Load("branchRight") as GameObject;
-		branchLeft = Resources.Load("branchLeft") as GameObject;
-		deadEnd = Resources.Load("deadEnd") as GameObject;
 
 		highScore = PlayerPrefs.GetFloat("highscore", 0.0f);
 		highScoreText.text = "HI " + ((int) highScore).ToString();
