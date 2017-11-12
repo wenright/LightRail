@@ -9,6 +9,11 @@ public class FadeImage : MonoBehaviour {
 	void Start () {
 		image = GetComponent<Image>();
 
+		// Reset fill transparency so that it can be invisible to start
+		Color color = image.color;
+		color.a = 1.0f;
+		image.color = color;
+
 		FadeOut();
 	}
 
