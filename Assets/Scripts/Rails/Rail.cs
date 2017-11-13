@@ -38,15 +38,24 @@ public class Rail : MonoBehaviour {
 	}
 
 	protected virtual Rail SpawnRail (Vector3 position) {
+		Rail spawnedRail;
+
 		if (ShouldSpawnBranchRight()) {
-			return SpawnRail(position, railSpawner.branchRight);
+			spawnedRail = SpawnRail(position, railSpawner.branchRight);
 		} else if (ShouldSpawnBranchLeft()) {
-			return SpawnRail(position, railSpawner.branchLeft);
+			spawnedRail = SpawnRail(position, railSpawner.branchLeft);
 		} else if (ShouldSpawnDeadEnd()) {
-			return SpawnRail(position, railSpawner.deadEnd);
+			spawnedRail = SpawnRail(position, railSpawner.deadEnd);
+		} else {
+			spawnedRail = SpawnRail(position, railSpawner.rail);
+
+			if (Random.value > 0.75f) {
+				GameObject coinInstance = Instantiate(railSpawner.coin, transform.position + position, Quaternion.identity) as GameObject;
+				coinInstance.transform.parent = spawnedRail.gameObject.transform;
+			}
 		}
 
-		return SpawnRail(position, railSpawner.rail);
+		return spawnedRail;
 	}
 
 	protected virtual Rail SpawnRail (Vector3 position, GameObject railTypeToSpawn) {
@@ -175,7 +184,10 @@ public class Rail : MonoBehaviour {
 		Vector2 pos = new Vector2(transform.position.x, transform.position.y);
 		Vector2 offset = new Vector2(dir / 2.0f, 0.75f);
 
-		Collider2D[] collisions = Physics2D.OverlapCircleAll(pos + offset, 0.25f);
+		// Only look for collisions with other rails
+		int layerMask = 1 << 8;
+
+		Collider2D[] collisions = Physics2D.OverlapCircleAll(pos + offset, 0.25f, layerMask);
 
 		// Draws a small line showing where the test point is
 		// Debug.DrawLine(pos + offset, pos + offset + new Vector2(0.25f, 0.0f), Color.red, 0.25f);

@@ -153,10 +153,17 @@ public class Player : MonoBehaviour {
 		var emission = stars.emission;
 		emission.enabled = false;
 
+		// Start slowing down time
 		var limitVel = stars.limitVelocityOverLifetime;
 		limitVel.enabled = true;
 		limitVel.limit = 0.0f;
 		limitVel.dampen = 0.1f;
+
+		// Save high score locally
+		PlayerPrefs.SetInt("highscore", scoreManager.GetScore());
+
+		// Upload high score
+		googlePlayController.UploadScore(scoreManager.GetScore());
 	}
 
 	private void TweenInUI () {

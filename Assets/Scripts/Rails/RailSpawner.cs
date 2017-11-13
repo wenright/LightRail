@@ -22,6 +22,7 @@ public class RailSpawner : MonoBehaviour {
 	public AdManager adManager;
 	public FadeImage fillImage;
 
+	// TODO sqrt(x) acceleration?
 	private float acceleration = 0.075f;
 
 	void Start () {

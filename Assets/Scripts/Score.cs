@@ -29,12 +29,6 @@ public class Score : MonoBehaviour {
 				// Hide current score, so it just shows the high score text
 				scoreText.DOFade(0.0f, 0.25f).SetEase(Ease.OutQuad);
 				scoreText.rectTransform.DOAnchorPosY(-48, 0.25f).SetEase(Ease.OutQuad);
-
-				// Save high score locally
-				PlayerPrefs.SetInt("highscore", score);
-
-				// Upload high score
-				googlePlayController.UploadScore(score);
 			}
 
 			highScore = score;
