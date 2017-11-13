@@ -15,11 +15,6 @@ public class RailSpawner : MonoBehaviour {
 	public GameObject deadEnd;
 	public GameObject coin;
 
-	public UnityEngine.UI.Text scoreText;
-	public UnityEngine.UI.Text highScoreText;
-	public float score = 0.0f;
-	public float highScore = 0.0f;
-
 	public Player player;
 
 	public List<Rail> rails;
@@ -28,7 +23,6 @@ public class RailSpawner : MonoBehaviour {
 	public FadeImage fillImage;
 
 	private float acceleration = 0.075f;
-	private bool hasBeatenHighScore = false;
 
 	void Start () {
 		// TODO remove this for actual game. Useful for debugging though
@@ -39,28 +33,11 @@ public class RailSpawner : MonoBehaviour {
 		GameObject playerObject = GameObject.FindWithTag("Player");
 		player = playerObject.GetComponent<Player>();
 
-		highScore = PlayerPrefs.GetFloat("highscore", 0.0f);
-		highScoreText.text = "HI " + ((int) highScore).ToString();
-
 		// TODO maybe wait a few seconds before setting the rail speed from 0
 	}
 
 	void Update () {
 		if (!player.gameOver) {
-			score += (speed * Time.deltaTime) / 1.5f;
-			scoreText.text = ((int) score).ToString();
-
-			if (score > highScore) {
-				if (!hasBeatenHighScore) {
-					hasBeatenHighScore = true;
-
-					scoreText.DOFade(0.0f, 0.25f).SetEase(Ease.OutQuad);
-					scoreText.rectTransform.DOAnchorPosY(-48, 0.25f).SetEase(Ease.OutQuad);
-				}
-
-				highScoreText.text = "HI " + ((int) score).ToString();
-			}
-
 			speed += acceleration * Time.deltaTime;
 		}
 	}

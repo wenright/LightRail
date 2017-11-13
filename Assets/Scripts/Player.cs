@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
 	public bool willTakeLeftBranch = false;
 	public GooglePlay googlePlayController;
 	public GameObject uiPanel;
+	public Score scoreManager;
 	public Text gameOverScoreText;
 	public GameObject explosion;
 	public ParticleSystem stars;
@@ -141,13 +142,6 @@ public class Player : MonoBehaviour {
 		// Tween the railspawner speed so that it smoothly goes to 0 after 0.5 seconds
 		// DOTween.To(() => railSpawner.speed, x => railSpawner.speed = x, 0, 0.5f).SetEase(Ease.OutQuad);
 
-		if (railSpawner.score > railSpawner.highScore) {
-			PlayerPrefs.SetFloat("highscore", railSpawner.score);
-
-			// Upload high score
-			googlePlayController.UploadScore((int) railSpawner.score);
-		}
-
 		Invoke("TweenInUI", 1.0f);
 
 		Instantiate(explosion, transform.position, Quaternion.identity);
@@ -172,6 +166,14 @@ public class Player : MonoBehaviour {
 		RectTransform rectTransform = uiPanel.GetComponent<RectTransform>();
 		rectTransform.DOAnchorPos(Vector2.zero, 0.5f, false).SetEase(Ease.OutQuad);
 
-		gameOverScoreText.text = ((int) railSpawner.score).ToString();
+		gameOverScoreText.text = scoreManager.GetScore().ToString();
 	}
+
+	private void OnTriggerEnter2D (Collider2D other) {
+		if (other.gameObject.tag == "Coin") {
+			scoreManager.AddToScore(1);
+
+			Destroy(other.gameObject);
+		}
+	}	
 }
