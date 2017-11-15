@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ResolutionController : MonoBehaviour {
 
+	// TODO is there a situation where device changes screen size dynamically? if so, this needs to be called from that callback
 	void Start ()  {
 		// http://gamedesigntheory.blogspot.com/2010/09/controlling-aspect-ratio-in-unity.html
 
@@ -22,17 +23,7 @@ public class ResolutionController : MonoBehaviour {
 		Camera camera = GetComponent<Camera>();
 
 		// if scaled height is less than current height, add letterbox
-		if (scaleheight < 1.0f) {
-			Rect rect = camera.rect;
-
-			rect.width = 1.0f;
-			rect.height = scaleheight;
-			rect.x = 0;
-			rect.y = (1.0f - scaleheight) / 2.0f;
-			
-			camera.rect = rect;
-		}
-		else {
+		if (scaleheight >= 1.0f) {
 			float scalewidth = 1.0f / scaleheight;
 
 			Rect rect = camera.rect;
